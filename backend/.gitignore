@@ -1,0 +1,51 @@
+# ──────────────── Build outputs ────────────────
+/dist
+/build
+
+# ──────────────── Node dependencies ────────────────
+/node_modules
+
+# ──────────────── Logs ────────────────
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ──────────────── Environment Variables ────────────────
+.env
+.env.*
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# ──────────────── Prisma ────────────────
+prisma/dev.db
+prisma/*.sqlite
+prisma/*.env
+prisma/migrations/
+
+# ──────────────── Testing ────────────────
+/coverage
+/.nyc_output
+
+# ──────────────── OS & Editor settings ────────────────
+.DS_Store
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# ──────────────── Temporary Files ────────────────
+.temp
+.tmp
+*.tsbuildinfo
+*.pid
+*.seed
+*.pid.lock
+
+# ──────────────── Diagnostic Reports ────────────────
+report.*.json

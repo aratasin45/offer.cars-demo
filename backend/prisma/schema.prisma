@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Employee {
+  id             Int      @id @default(autoincrement())
+  name           String
+  email          String   @unique
+  password       String
+  role           String   @default("user")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  employeeNumber String   @unique
+  cars           Car[]    // 🔥 Carとのリレーション
+  contracts Contract[] // 🔥 追加
+}
+
+model Customer {
+  id          Int      @id @default(autoincrement())
+  name        String
+  threeLetter String
+  email       String @unique  // ←これが必要
+  password    String
+  contractTerm String @default("EXW")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  offers         Offer[]
+  contracts Contract[] // 🔥 追加
+}
+
+model Condition {
+  id        Int      @id @default(autoincrement())
+  label     String
+  labelEn   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  carConditions CarCondition[]  // 🔥 これを追加
+}
+
+model Manufacturer {
+  id    Int    @id @default(autoincrement())
+  name  String
+  nameEn String
+  cars  Car[]
+}
+
+model CarCondition {
+  id           Int       @id @default(autoincrement())
+  car          Car       @relation(fields: [carId], references: [id])
+  carId        Int
+  condition    Condition @relation(fields: [conditionId], references: [id])
+  conditionId  Int
+}
+
+model CarImage {
+  id       Int    @id @default(autoincrement())
+  car      Car    @relation(fields: [carId], references: [id])
+  carId    Int
+  imageUrl String
+}
+
+// 既存の Car モデルにもリレーション追加（必要に応じて）
+model Car {
+  id             Int           @id @default(autoincrement())
+  manufacturer   Manufacturer  @relation(fields: [manufacturerId], references: [id])
+  manufacturerId Int
+  carName        String
+  carNameEn      String?
+  modelCode      String
+  vinNumber      String
+  engineModel    String
+  displacement   String
+  driveType      String
+  transmission   String
+  year           Int
+  month          Int
+  createdBy      Int
+  createdByUser  Employee  @relation(fields: [createdBy], references: [id])  // 🔥 ここ追加
+  rating         Int  @default(3)  //総合評価: 1〜5の整数（任意→必須にするなら Int に）
+  startPrice     Int?       // 🔥 スタートプライス（千円単位保存）
+  purchasePrice  Int?       // 🔥 仕入れ値（千円単位保存、後で別ページで登録）
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  offers         Offer[]
+  status         String    @default("available") // 🔥 ここ追加！
+  conditions     CarCondition[]
+  images         CarImage[]
+  contracts Contract[] // 🔥 追加
+}
+
+model Offer {
+  id          Int      @id @default(autoincrement())
+  carId       Int
+  customerId  Int
+  style       String
+  offerPrice  Int
+  contractTerm String  
+  createdAt   DateTime @default(now())
+
+  car         Car      @relation(fields: [carId], references: [id])
+  customer    Customer @relation(fields: [customerId], references: [id])
+}
+
+model Contract {
+  id           Int      @id @default(autoincrement())
+  carId        Int
+  customerId   Int
+  createdById  Int                    // 🔥 登録者
+  contractTerm String
+  factoryPrice Int
+  style        String
+  offerPrice   Int
+  profit       Int
+  createdAt    DateTime @default(now())
+
+  car       Car      @relation(fields: [carId], references: [id])
+  customer  Customer @relation(fields: [customerId], references: [id])
+  createdBy Employee @relation(fields: [createdById], references: [id]) // 🔥 リレーション定義
+}

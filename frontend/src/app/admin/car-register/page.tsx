@@ -30,6 +30,11 @@ interface Car {
   startPrice: string;  // 🆕 🔥追加！！
 }
 
+interface RegisteredCar extends Car {
+  id: number;
+  modelCode: string;
+  vinNumber: string;
+}
 
 export default function CarRegisterPage() {
 
@@ -62,7 +67,7 @@ export default function CarRegisterPage() {
     startPrice: "",  // 🆕
   });
 
-  const [registeredCar, setRegisteredCar] = useState<any>(null);
+  const [registeredCar, setRegisteredCar] = useState<RegisteredCar | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const years = Array.from({ length: 30 }, (_, i) => new Date().getFullYear() - i);
@@ -131,6 +136,11 @@ export default function CarRegisterPage() {
   };
 
   const handleEditComplete = async () => {
+    if (!registeredCar) {
+      alert("車両情報が見つかりません");
+      return;
+    }
+  
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cars/${registeredCar.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -141,10 +151,10 @@ export default function CarRegisterPage() {
         month: Number(formData.month),
         rating: Number(formData.rating),
         createdBy: Number(formData.createdBy),
-        startPrice: Number(formData.startPrice),  // 🆕 ここ追加！！
+        startPrice: Number(formData.startPrice),
       }),
     });
-
+  
     if (res.ok) {
       const updatedCar = await res.json();
       alert("✅ 編集内容を保存しました");
@@ -464,8 +474,15 @@ export default function CarRegisterPage() {
 
       let successCount = 0;
 
+      if (!registeredCar) {
+        alert("車両情報が見つかりません");
+        return;
+      }
+      
+      const carId = registeredCar.id;
+      
       for (const file of Array.from(files)) {
-        const success = await uploadFileToS3(file, registeredCar.id);
+        const success = await uploadFileToS3(file, carId);
         if (success) successCount++;
       }
 

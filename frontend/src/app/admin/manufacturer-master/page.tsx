@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import ManufacturerForm from "./components/ManufacturerForm";
 import ManufacturerTable from "./components/ManufacturerTable";
 import AdminHeader from "../components/AdminHeader";
-import { useRouter } from "next/navigation";
 
 interface Manufacturer {
   id: number;
@@ -12,17 +11,6 @@ interface Manufacturer {
 }
 
 export default function ManufacturerMasterPage() {
-
-  const router = useRouter(); // ✅ ここはOK
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/admin/login");
-    }
-  }, [router]);
-
-
   const [manufacturers, setManufacturers] = useState<Manufacturer[]>([]);
 
   useEffect(() => {

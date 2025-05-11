@@ -14,7 +14,7 @@ export default function CustomerLoginPage() {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:5001/auth/customer-login", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/customer-login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, threeLetter, password }),

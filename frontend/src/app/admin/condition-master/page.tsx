@@ -32,7 +32,7 @@ export default function ConditionMasterPage() {
 
   const fetchConditions = async () => {
     try {
-      const res = await fetch("http://localhost:5001/conditions");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/conditions`);
       const data = await res.json();
 
       if (Array.isArray(data)) {
@@ -48,7 +48,7 @@ export default function ConditionMasterPage() {
 
   // 🔹 新規追加
   const handleAddCondition = async (newCondition: { label: string; labelEn: string }) => {
-    const res = await fetch("http://localhost:5001/conditions", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/conditions`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newCondition),
@@ -60,7 +60,7 @@ export default function ConditionMasterPage() {
 
   // 🔹 編集
   const handleUpdateCondition = async (id: number, updated: Partial<Condition>) => {
-    const res = await fetch(`http://localhost:5001/conditions/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/conditions/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updated),
@@ -75,7 +75,7 @@ export default function ConditionMasterPage() {
   // 🔹 削除
   const handleDeleteCondition = async (id: number) => {
     if (!confirm("本当に削除しますか？")) return;
-    const res = await fetch(`http://localhost:5001/conditions/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/conditions/${id}`, {
       method: "DELETE",
     });
     if (res.ok) {

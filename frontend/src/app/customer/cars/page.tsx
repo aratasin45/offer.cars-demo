@@ -40,14 +40,17 @@ export default function CustomerCarListPage() {
     const limit = 10;
     const totalPages = Math.ceil(total / limit);
 
-  useEffect(() => {
-    fetch(`http://localhost:5001/cars/available?page=${page}&limit=${limit}`)
-    .then((res) => res.json())
-    .then((data) => {
-      setCars(data.data);
-      setTotal(data.total);
-    });
-}, [page]);
+    useEffect(() => {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/cars/available?page=${page}&limit=${limit}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setCars(data.data);
+          setTotal(data.total);
+        })
+        .catch(() => {
+          alert("❌ Failed to fetch vehicle list");
+        });
+    }, [page]);
 
   return (
      <><CustomerHeader />

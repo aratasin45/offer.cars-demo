@@ -30,7 +30,6 @@ export default function CustomerCarDetailPage() {
   
   const [car, setCar] = useState<Car | null>(null);
   const [mainImage, setMainImage] = useState<string | null>(null);
-  const [offer, setOffer] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   
@@ -40,13 +39,6 @@ export default function CustomerCarDetailPage() {
   const carId = params?.id as string;
 
   
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/customer/login");
-    }
-  }, [router]);
 
 
   const [purchaseStyles, setPurchaseStyles] = useState<Record<string, { checked: boolean; value: string }>>({
@@ -65,13 +57,13 @@ export default function CustomerCarDetailPage() {
       router.push("/customer/login");
       return;
     }
-
+  
     const storedTerm = localStorage.getItem("contractTerm");
-  setContractTerm(storedTerm);
-
+    setContractTerm(storedTerm);
+  
     if (!carId) return;
-
-    fetch(`http://localhost:5001/cars/${carId}`)
+  
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/cars/${carId}`)
       .then((res) => res.json())
       .then((data) => {
         setCar(data);
@@ -118,7 +110,7 @@ export default function CustomerCarDetailPage() {
     }
   
     // 🔥 送信処理
-    const res = await fetch("http://localhost:5001/offers", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -146,8 +138,6 @@ export default function CustomerCarDetailPage() {
   if (!car) return <p>Loading...</p>;
 
   const isNoDocument = !!car && car.conditions.some((cond) => cond.condition.id === 1);
-console.log("条件ID一覧:", car.conditions.map((c) => c.condition.id));
-console.log("isNoDocument:", isNoDocument);
 
   return (
     <><CustomerHeader />

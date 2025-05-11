@@ -1,0 +1,1328 @@
+/* ✅ 基本スタイル */
+:root {
+  --background: #ff9d5c;
+  --foreground: #f1f1f1;
+  --font-sans: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  margin: 0;
+  padding: 0;
+  display: block; /* ← flex から block に変更 */
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* ✅ ログインページ */
+.login-container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ff9d5c 20%, #7f4c4c 90%);
+}
+
+.login-card {
+  width: 400px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0px 6px 16px rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 12px 25px rgba(255, 255, 255, 0.3);
+}
+
+/* ✅ 入力フィールド */
+.login-input {
+  width: 100%;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  font-size: 1rem;
+  transition: box-shadow 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.login-input:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(255, 140, 0, 0.7);
+  transform: scale(1.02);
+}
+
+/* ✅ ボタン */
+.login-button {
+  width: 80%;
+  max-width: 300px;
+  padding: 0.8rem;
+  font-size: 1rem;
+  background: linear-gradient(135deg, #ff8c00, #cc7000);
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.login-button:hover {
+  background: linear-gradient(135deg, #cc7000, #ff8c00);
+  transform: scale(1.05);
+}
+
+/* ✅ ホーム画面 */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 100vh;
+  padding-top: 80px;
+  background: linear-gradient(135deg, #ff9d5c 20%, #7f4c4c 90%);
+  color: #fff;
+}
+
+
+
+/* ✅ ホーム画面のカード */
+.home-card {
+  width: 600px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  padding: 2rem;
+  margin-top: 4rem;
+  border-radius: 12px;
+  box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ✅ ボタン */
+.home-card-button {
+  width: 90%;
+  max-width: 280px;
+  padding: 0.8rem;
+  font-size: 1rem;
+  background: linear-gradient(135deg, #ff8c00, #e65100);
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.home-card-button:hover {
+  background: linear-gradient(135deg, #e65100, #ff8c00);
+  transform: scale(1.05);
+}
+
+/* ✅ 管理者用カード */
+.home-admin-card {
+  display: none;
+}
+
+.home-admin-card.admin-visible {
+  display: block;
+}
+
+/* ✅ レスポンシブ対応（768px以下：スマホ表示最適化） */
+@media (max-width: 768px) {
+  /* ホーム全体の余白調整 */
+
+  .home-user-info {
+    font-size: 0.9rem;
+  }
+
+  .home-container {
+    padding-top: 100px;
+  }
+
+  /* ホームカードの幅調整と余白見直し */
+  .home-card {
+    width: 90%;
+    padding: 1rem;
+    margin-top: 2rem;
+  }
+
+  .home-card h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .home-card-button {
+    font-size: 1rem;
+    padding: 0.8rem;
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+
+  /* ログインカード */
+  .login-card {
+    width: 85%;
+    max-width: 340px;
+    padding: 1.2rem;
+  }
+
+  .login-input {
+    width: 100%;
+    font-size: 0.95rem;
+    padding: 0.7rem;
+    margin-bottom: 1rem;
+    box-sizing:border-box;
+  }
+
+  .login-button {
+    font-size: 1rem;
+    padding: 0.8rem;
+    width: 100%;
+    max-width: 240px;
+    margin-top: 1rem;
+  }
+
+  /* 社員フォーム */
+  .employee-container {
+    padding: 1.5rem;
+    width: 95%;
+  }
+
+  .employee-form label,
+  .employee-form input,
+  .employee-form select {
+    font-size: 1rem;
+  }
+
+  .employee-form input,
+  .employee-form select {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  .employee-button {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+  }
+
+  /* テーブルのフォント縮小 */
+  .employee-table th,
+  .employee-table td {
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
+
+  /* 車両カードの表示を縦にする */
+  .car-card {
+    display: flex;
+    flex-direction: column;
+    flex-direction: column !important; /* ✅ 確実に縦にする */
+    align-items: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid #070401;
+    border-radius: 8px;
+    gap: 0.8rem;
+    position: relative; /* ✅ これを追加！ */
+  }
+
+  .car-details {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    word-break: break-word;
+    padding: 0.5rem 1rem;
+  }
+
+
+  .car-details p {
+    margin: 0.3rem 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+
+
+  .car-thumbnail {
+    width: 100%;
+    height: auto;
+    max-height: 180px;
+    max-width: 180px;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+  
+
+  .car-card p {
+    margin: 0.4rem 0;
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  
+  .car-view-button {
+    position: static !important; /* ✅ 競合を完全に打ち消す */
+    position: static;         /* ✅ フロー内配置に変更 */
+    width: 100%;
+    margin-top: 1rem;
+    text-align: center;
+    display: block;
+    font-size: 0.5rem;
+  }
+
+
+  /* モーダル修正（スマホ画面に収まる） */
+  .modal-content {
+    max-width: 95vw;
+    max-height: 80vh;
+  }
+
+  .modal-image {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 6px;
+  }
+
+  .modal-close-button {
+    top: 5px;
+    right: 10px;
+    font-size: 20px;
+  }
+
+  .modal-arrow.left {
+    left: 10px;
+  }
+
+  .modal-arrow.right {
+    right: 10px;
+  }
+
+  /* 共通入力フィールドの調整 */
+  input,
+  select {
+    font-size: 1rem;
+    padding: 0.7rem;
+  }
+
+  /* 車両詳細ページのタイトル */
+  .car-list-container h2 {
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  /* メイン画像の大きさ制限 */
+  .car-list-container img {
+    width: 100%;
+    height: auto;
+    max-height: 220px;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+
+  /* サムネイル画像の調整 */
+  .car-list-container .thumbnail-strip img {
+    width: 60px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  /* 情報テキストの見やすさ改善 */
+  .car-list-container p {
+    font-size: 1rem;
+    margin: 0.4rem 0;
+    line-height: 1.5;
+  }
+
+  /* 入力欄とボタン */
+  .customer-input {
+    font-size: 1rem;
+    padding: 0.7rem;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .employee-button {
+    font-size: 1rem;
+    padding: 0.8rem;
+    width: 100%;
+    margin-top: 0.8rem;
+  }
+}
+
+.employee-container {
+  width: 90%;
+  max-width: 800px;
+  margin: auto;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0px 6px 16px rgba(255, 255, 255, 0.3);
+}
+
+.employee-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.employee-form input {
+  padding: 0.8rem;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.employee-button {
+  padding: 0.7rem;
+  font-size: 1rem;
+  background: linear-gradient(135deg, #ff8c00, #cc7000);
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 90%;
+  margin-top: 1rem;
+}
+
+.employee-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.employee-table th,
+.employee-table td {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.8rem;
+  text-align: left;
+}
+
+.employee-edit-button {
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #ff8c00, #e65100);
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.employee-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+}
+
+.employee-update-button {
+  background: linear-gradient(135deg, #00c853, #009624);
+}
+
+.employee-cancel-button {
+  background: linear-gradient(135deg, #d50000, #b71c1c);
+}
+
+.customer-input {
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  width: 100%;
+}
+
+.customer-edit-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.customer-edit-button,
+.customer-update-button,
+.customer-cancel-button,
+.customer-delete-button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+}
+
+.customer-edit-button {
+  background: linear-gradient(135deg, #ffa000, #ff6f00);
+}
+
+.customer-update-button {
+  background: linear-gradient(135deg, #00c853, #009624);
+}
+
+.customer-cancel-button {
+  background: linear-gradient(135deg, #d50000, #b71c1c);
+}
+
+.customer-delete-button {
+  background: linear-gradient(135deg, #e53935, #c62828);
+}
+
+/* 共通スタイル */
+input,
+select {
+  padding: 0.8rem;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1rem;
+  transition: box-shadow 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(255, 140, 0, 0.7);
+  transform: scale(1.02);
+}
+
+/* セレクトボックスの矢印をカスタム */
+select {
+  appearance: none; /* 標準の矢印を消す */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%204%205%27%3E%3Cpath%20fill%3D%27%23ffffff%27%20d%3D%27M2%200L0%202h4L2%200zm0%205L0%203h4L2%205z%27/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 0.65rem auto;
+  cursor: pointer;
+}
+
+.car-list-container {
+  width: 90%;
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  color: #fff;
+}
+
+.car-list-container h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1rem;
+}
+
+.sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.sort-controls select {
+  padding: 0.5rem;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border: none;
+}
+
+.car-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.car-card {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 1rem;
+  height: auto;
+  min-height: unset;
+  border: 2px solid #070401;    /* ✅ 枠線復活 */
+  border-radius: 8px;
+  gap: 1rem;
+  position: relative; /* ✅ これがないと絶対配置がはみ出る */
+}
+
+.car-details {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding-right: 140px; /* ボタンと被らない */
+}
+
+.car-details p {
+  margin: 0;
+  white-space: nowrap;
+  min-width: 130px;
+  flex-shrink: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.car-thumbnail {
+  width: 140px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.car-card p {
+  margin: 0.2rem 0;
+  font-size: 0.9rem;
+}
+
+.car-card label {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.car-card select {
+  margin-left: 0.5rem;
+  padding: 0.4rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border: none;
+}
+
+.start-price {
+  font-weight: bold;
+  color: #ffeb3b;         /* 明るい黄色 */
+  font-size: 1.05rem;
+  text-shadow: 1px 1px 2px #00000060;  /* 少し影をつけて視認性アップ */
+}
+
+.employee-button {
+  display: block;
+  margin: 2rem auto 0;
+  padding: 0.8rem 2rem;
+  background: linear-gradient(135deg, #ff8c00, #cc7000);
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.car-view-button {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  font-size: 0.9rem;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #ff8c00, #e65100);
+  color: white;
+  cursor: pointer;
+}
+
+/* ✅ 編集モード用フォーム (登録済み車両) */
+.edit-car-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.edit-car-form label {
+  font-weight: bold;
+  margin-bottom: 0.2rem;
+}
+
+.edit-car-form input,
+.edit-car-form select {
+  padding: 0.8rem;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1rem;
+  transition: box-shadow 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.edit-car-form input:focus,
+.edit-car-form select:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(255, 140, 0, 0.7);
+  transform: scale(1.02);
+}
+
+.edit-car-form button {
+  margin-top: 1rem;
+  padding: 0.8rem;
+  font-size: 1rem;
+  background: linear-gradient(135deg, #ff8c00, #cc7000);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.edit-car-form button:hover {
+  background: linear-gradient(135deg, #cc7000, #ff8c00);
+}
+
+@media (max-width: 768px) {
+  /* 車両登録フォーム全体 */
+  .employee-container {
+    padding: 1.5rem;
+    width: 95%;
+  }
+
+  /* フォームのラベルと入力欄 */
+  .employee-form label,
+  .employee-form input,
+  .employee-form select {
+    font-size: 1rem;
+  }
+
+  /* 入力欄（スマホで押しやすく） */
+  .employee-form input,
+  .employee-form select {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  /* ボタン */
+  .employee-button {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+  }
+
+  /* 登録後の表示部分 */
+  .registered-car p {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+  }
+
+  /* モーダル背景 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* モーダル本体（画像含む） */
+.modal-content {
+  position: relative;
+  max-width: 80vw;
+  max-height: 600px;
+}
+
+/* モーダル内の拡大画像 */
+.modal-image {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+/* モーダル閉じるボタン */
+.modal-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  background: none;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+/* モーダルの矢印ボタン（共通） */
+.modal-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 30px;
+  background: none;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-arrow.left {
+  left: -40px;
+}
+
+.modal-arrow.right {
+  right: -40px;
+}
+
+.customer-header-wrapper {
+  width: 100%;
+  background-color: #121212;
+  padding: 12px 0;
+  display: flex;
+  justify-content: center;
+  position: sticky; /* スクロールしても固定可 */
+  top: 0;
+  z-index: 999;
+}
+
+.customer-header {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.customer-header span {
+  font-weight: 500;
+  margin-right: 20px;
+}
+
+.customer-header button {
+  background-color: #e53935;
+  color: #ffffff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.customer-header button:hover {
+  background-color: #c62828;
+}
+
+.car-info-wrapper {
+  flex-direction: column;
+}
+
+.car-info-card,
+.car-condition-card {
+  width: 90%;
+}
+}
+
+.offer-table {
+  display: none;
+}
+
+.offer-card {
+  display: block;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.offer-card p {
+  margin: 0.4rem 0;
+  font-size: 0.95rem;
+  color: #fff;
+}
+
+.offer-card .offer-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* ✅ iPad表示最適化 */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .car-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 1rem;
+    height: auto;
+    min-height: unset !important; /* ← これがキー */
+  }
+
+  .car-details {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    padding-right: 140px;
+  }
+
+  .car-details p {
+    margin: 0;
+    white-space: nowrap;
+    min-width: 120px;
+    flex-shrink: 0;
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  .car-thumbnail {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+
+  .car-view-button {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+  }
+
+  
+}
+
+.customer-header-wrapper {
+  width: 100%;
+  background-color: #121212;
+  padding: 12px 0;
+  display: flex;
+  justify-content: center;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.customer-header {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.customer-header span {
+  font-weight: 500;
+  margin-right: 20px;
+}
+
+.customer-header button {
+  background-color: #e53935;
+  color: #ffffff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.customer-header button:hover {
+  background-color: #c62828;
+}
+
+.purchase-style-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.purchase-style-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+}
+
+.purchase-style-row input[type="checkbox"] {
+  transform: scale(1.2);
+}
+
+.style-label {
+  width: 60px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.contract-term {
+  flex: 1;
+  color: #ccc;
+}
+
+.offer-input {
+  width: 120px;
+  padding: 0.4rem;
+  border-radius: 6px;
+  border: none;
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  text-align: right;
+}
+
+.currency {
+  color: #fff;
+  margin-left: 6px;
+}
+
+.car-info-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin: 1.5rem 0;
+}
+
+.car-info-card,
+.car-condition-card {
+  flex: 1 1 45%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(6px);
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  color: white;
+}
+
+/* Chrome, Safari, Edge 対応 */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox 対応 */
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.pagination {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.active-page {
+  font-weight: bold;
+  background-color: #007bff;
+  color: white;
+}
+
+  /* ✅ オファー一覧テーブルのスタイル改善 */
+
+  .admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+/* PC・iPadではカード型を非表示 */
+.offer-card-list {
+  display: none;
+}
+
+  .offer-table {
+    display: table; /* ← PC・iPadでも表示されるように */
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+  }
+
+.offer-table th,
+.offer-table td {
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.offer-table th {
+  background: rgba(0, 0, 0, 0.5);
+  font-weight: bold;
+}
+
+.offer-table tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.offer-table tr:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.offer-table button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: transform 0.2s ease-in-out;
+}
+
+.offer-table button:hover {
+  transform: scale(1.05);
+}
+
+/* ✅ 成約ボタンカラー */
+.offer-table button:enabled {
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  color: white;
+}
+
+/* ✅ 非購入ボタン */
+.offer-table .non-purchase-button {
+  background: linear-gradient(135deg, #d32f2f, #b71c1c);
+  color: white;
+}
+
+/* ✅ disabled ボタン */
+.offer-table button:disabled {
+  background: #888;
+  cursor: not-allowed;
+}
+
+/* ✅ ステータス色分け */
+.row-sold {
+  background-color: #2e7d32 !important;
+  color: #ffffff;
+}
+
+.row-closed {
+  background-color: #424242 !important;
+}
+
+.row-available {
+  background-color: #0277bd !important;
+}
+
+.row-no-get {
+  background-color: #b71c1c !important;
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .offer-table {
+    display: none; /* テーブル形式を非表示 */
+  }
+
+  .offer-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .offer-card-item {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    font-size: 0.95rem;
+    color: #fff;
+  }
+
+  .offer-card-item p {
+    margin: 0.3rem 0;
+    line-height: 1.4;
+    font-size: 0.9rem;
+  }
+
+  .offer-card-label {
+    font-weight: bold;
+    margin-right: 6px;
+    display: inline-block;
+    min-width: 90px;
+  }
+
+  .offer-card-buttons {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .offer-card-buttons button {
+    flex: 1;
+    padding: 0.5rem;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    color: white;
+  }
+
+  .btn-confirm {
+    background: linear-gradient(135deg, #4caf50, #2e7d32);
+  }
+
+  .btn-reject {
+    background: linear-gradient(135deg, #d32f2f, #b71c1c);
+  }
+
+  .btn-disabled {
+    background: #888;
+    cursor: not-allowed;
+  }
+}
+
+/* ステータス＋編集ボタン用ボックス */
+.car-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: unset;   /* ✅ これが重要！強制幅を外す */
+  width: 100%;        /* ✅ スマホで枠内におさめる */
+  margin-left: 0;
+  margin-top: 0.5rem;
+}
+
+.car-actions select {
+  padding: 0.3rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.search-input {
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .car-actions {
+    align-items: center;
+    width: 100%;
+  }
+
+  .car-actions select {
+    width: 90%;
+  }
+
+  .car-view-button {
+    width: 90%;
+    text-align: center;
+  }
+
+  .search-input {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+    margin: 0 auto 1rem auto;
+    display: block;
+  }
+}
+
+/* スマホ用レイアウト修正 */
+@media (max-width: 768px) {
+  .employee-container {
+    width: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+
+  .employee-form input,
+  .employee-form select,
+  .employee-form textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box; /* ✅ はみ出し防止 */
+    padding: 0.8rem;
+    font-size: 1rem;
+  }
+
+  .employee-button {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1rem;
+    padding: 1rem;
+  }
+}
+
+.contract-page-container {
+  background-color: #f87c45; /* 他ページと同じオレンジ系 */
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.contract-card-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.contract-card {
+  background-color: #5d2b1a; /* 茶色ベース */
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 300px;
+}
+
+.contract-card p {
+  margin: 0.3rem 0;
+  font-size: 0.9rem;
+}
+
+.contract-card .profit {
+  font-weight: bold;
+  color: #00ff00; /* 利益だけ強調（緑） */
+}
+
+.back-button {
+  background-color: #333;
+  color: white;
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #555;
+}

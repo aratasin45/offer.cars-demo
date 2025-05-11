@@ -1,18 +1,31 @@
 "use client";
 import { useState } from "react";
 
-interface CustomerFormProps {
-  onAddCustomer: (customer: any) => void;
+// 🔹 型定義をエクスポートすることで他のファイルでも再利用可能
+export interface CustomerData {
+  name: string;
+  threeLetter: string;
+  email: string;
+  password: string;
+  contractTerm: string;
 }
 
-export default function CustomerForm({ onAddCustomer }: CustomerFormProps) {
-  const [formData, setFormData] = useState({
-    name: "",
-    threeLetter: "",
-    email: "",
-    password: "",
-    contractTerm: "EXW", // ✅ 初期値
-  });
+export default function CustomerForm({
+  onSubmit,
+  initialData,
+}: {
+  onSubmit: (data: CustomerData) => void;
+  initialData?: CustomerData;
+}) {
+  const [formData, setFormData] = useState<CustomerData>(
+    initialData ?? {
+      name: "",
+      threeLetter: "",
+      email: "",
+      password: "",
+      contractTerm: "EXW",
+    }
+  );
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -22,13 +35,13 @@ export default function CustomerForm({ onAddCustomer }: CustomerFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onAddCustomer(formData);
+    onSubmit(formData); // ✅ 正しく受け取った props を呼ぶ
     setFormData({
       name: "",
       threeLetter: "",
       email: "",
       password: "",
-      contractTerm: "EXW", // ✅ 初期値に戻す
+      contractTerm: "EXW",
     });
   };
 

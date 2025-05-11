@@ -4,6 +4,7 @@ import CustomerForm from "./components/CustomerForm";
 import CustomerTable from "./components/CustomerTable";
 import AdminHeader from "../components/AdminHeader";
 import { useRouter } from "next/navigation";
+import type { CustomerData } from "./components/CustomerForm";
 
 interface Customer {
   id: number;
@@ -42,7 +43,7 @@ export default function CustomerMasterPage() {
     }
   };
 
-  const handleAddCustomer = async (newCustomer: any) => {
+  const handleAddCustomer = async (newCustomer: CustomerData) =>{
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/customers`, {
         method: "POST",
@@ -91,7 +92,7 @@ export default function CustomerMasterPage() {
     <div className="employee-container">
       <AdminHeader />
       <h2>顧客マスタ</h2>
-      <CustomerForm onAddCustomer={handleAddCustomer} />
+      <CustomerForm onSubmit={handleAddCustomer} />
       <CustomerTable
         customers={customers}
         onUpdateCustomer={handleUpdateCustomer}

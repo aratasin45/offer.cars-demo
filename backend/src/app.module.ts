@@ -13,9 +13,10 @@ import { S3Module } from './aws/s3.module';
 import { CarImagesModule } from './carimages/carimages.module';
 import { OffersModule } from './offers/offers.module';
 import { ContractsModule } from './contracts/contracts.module';
+import { CustomMailerModule } from './mailer/mailer.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule, EmployeesModule,ConditionsModule,CustomersModule,ManufacturersModule,CarsModule,CarConditionsModule,S3Module,CarImagesModule,OffersModule,ContractsModule,], // 追加
+  imports: [PrismaModule, AuthModule, EmployeesModule,ConditionsModule,CustomersModule,ManufacturersModule,CarsModule,CarConditionsModule,S3Module,CarImagesModule,OffersModule,ContractsModule, CustomMailerModule,], // 追加
   controllers: [AppController],
   providers: [AppService],
 })

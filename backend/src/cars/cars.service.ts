@@ -2,10 +2,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Car } from '@prisma/client';
+import { MailService } from '../mailer/mailer.service';
 
 @Injectable()
 export class CarsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService,
+    private readonly mailService: MailService,) {}
 
   // 🔹 一覧取得
   async findAll(): Promise<Car[]> {
@@ -22,24 +24,39 @@ export class CarsService {
   // 🔹 新規登録（保存前に車両型式と車体番号を分割）
   async create(data: any): Promise<Car> {
     const { modelCodeVin, ...rest } = data;
-
+  
     let modelCode = modelCodeVin;
     let vinNumber = "";
-
+  
     if (modelCodeVin.includes("-") || modelCodeVin.includes("ー")) {
       const delimiter = modelCodeVin.includes("-") ? "-" : "ー";
       const parts = modelCodeVin.split(delimiter);
       modelCode = parts[0];
       vinNumber = parts[1];
     }
-
-    return this.prisma.car.create({
+  
+    // 🔹 DB登録
+    const newCar = await this.prisma.car.create({
       data: {
         ...rest,
         modelCode,
         vinNumber,
       },
     });
+  
+    // ✅ 顧客全員にメール通知
+    const customers = await this.prisma.customer.findMany(); 
+    for (const customer of customers) {
+      if (customer.email) {
+        await this.mailService.sendCarRegisteredEmail(
+          customer.email,
+          'New Vehicle Available!',
+          process.env.CUSTOMER_LOGIN_URL!
+        );
+      }
+    }
+  
+    return newCar; // ← return は最後に1回だけ
   }
 
   // 🔹 rating を更新するメソッド

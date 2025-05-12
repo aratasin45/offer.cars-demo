@@ -146,14 +146,14 @@ export default function CarListPage() {
       </div>
 
       <div className="pagination">
-        {Array.from({ length: totalPages }, (_, idx) => (
-          <button
-            key={idx}
-            onClick={() => setPage(idx + 1)}
-            className={page === idx + 1 ? "active-page" : ""}
-          >
-            {idx + 1}
-          </button>
+      {Array.from({ length: totalPages }).map((_, idx) => (
+  <button
+    key={idx}
+    onClick={() => setPage(idx + 1)}
+    className={page === idx + 1 ? "active-page" : ""}
+  >
+    {idx + 1}
+  </button>
         ))}
       </div>
 

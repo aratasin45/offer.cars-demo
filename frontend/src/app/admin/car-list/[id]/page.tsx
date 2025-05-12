@@ -82,7 +82,7 @@ export default function AdminCarDetailPage() {
     const file = e.target.files?.[0];
     if (!file || !car) return;
   
-    const key = `cars/${Date.now()}key${file.name}`;
+    const key = `cars/${Date.now()}${file.name}`;
     const presignRes = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/s3/presign?filename=${encodeURIComponent(key)}&contentType=${file.type}`
     );

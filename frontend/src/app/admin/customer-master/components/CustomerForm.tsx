@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
-import type { ContractTerm } from "./CustomerTable";
 
-// 🔹 型定義をエクスポートすることで他のファイルでも再利用可能
+// ✅ 明示的に定義してESLintエラー回避
+type ContractTerm = "EXW" | "FOB" | "C&F" | "CIF";
+
 export interface CustomerData {
   name: string;
   threeLetter: string;
@@ -10,7 +11,6 @@ export interface CustomerData {
   password: string;
   contractTerm: ContractTerm;
 }
-
 export default function CustomerForm({
   onSubmit,
   initialData,

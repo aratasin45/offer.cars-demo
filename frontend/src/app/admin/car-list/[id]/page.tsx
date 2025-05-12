@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import AdminHeader from "../../components/AdminHeader";
 
@@ -46,19 +46,19 @@ export default function AdminCarDetailPage() {
     }
   }, [router]);
 
-  const fetchCar = async () => {
+  const fetchCar = useCallback(async () => {
+    if (!carId) return;
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cars/${carId}`);
     const data = await res.json();
     setCar(data);
     if (data.images?.length > 0) {
       setMainImage(data.images[0].imageUrl);
-      
     }
-  };
-
+  }, [carId]); // 🔸 carId を依存に含める
+  
   useEffect(() => {
-    if (carId) fetchCar();
-  }, [carId]);
+    fetchCar();
+  }, [fetchCar]);
 
   const handleDeleteImage = async (imageId: number) => {
     if (!car) return;
@@ -119,7 +119,7 @@ export default function AdminCarDetailPage() {
     if (!car) return;
 
     const sanitized = Object.fromEntries(
-      Object.entries(editData).filter(([key, v]) => v !== undefined && v !== null)
+      Object.entries(editData).filter(([, v]) => v !== undefined && v !== null)
     );
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cars/${car.id}`, {
@@ -155,41 +155,38 @@ export default function AdminCarDetailPage() {
         </div>
       )}
 
-      <div style={{ display: "flex", gap: "10px", overflowX: "auto" }}>
-        {car.images.map((img, idx) => (
-          <div key={img.id} style={{ textAlign: "center" }}>
-            <img
-              src={img.imageUrl}
-              alt={`Thumb ${idx}`}
-              style={{
-                width: "100px",
-                height: "70px",
-                objectFit: "cover",
-                cursor: "pointer",
-                border: img.imageUrl === mainImage ? "2px solid blue" : "1px solid gray",
-              }}
-              onClick={() => {
-                setMainImage(img.imageUrl);
-
-              }}
-            />
-            <button
-              onClick={() => handleDeleteImage(img.id)}
-              style={{
-                marginTop: "4px",
-                backgroundColor: "#d32f2f",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                padding: "2px 6px",
-                cursor: "pointer",
-              }}
-            >
-              削除
-            </button>
-          </div>
-        ))}
-      </div>
+{car.images.map((img) => (
+  <div key={img.id} style={{ textAlign: "center" }}>
+    <img
+      src={img.imageUrl}
+      alt="Thumb"
+      style={{
+        width: "100px",
+        height: "70px",
+        objectFit: "cover",
+        cursor: "pointer",
+        border: img.imageUrl === mainImage ? "2px solid blue" : "1px solid gray",
+      }}
+      onClick={() => {
+        setMainImage(img.imageUrl);
+      }}
+    />
+    <button
+      onClick={() => handleDeleteImage(img.id)}
+      style={{
+        marginTop: "4px",
+        backgroundColor: "#d32f2f",
+        color: "white",
+        border: "none",
+        borderRadius: "4px",
+        padding: "2px 6px",
+        cursor: "pointer",
+      }}
+    >
+      削除
+    </button>
+  </div>
+))}
 
       <div style={{ marginTop: "10px" }}>
   <label>画像をアップロード：</label>

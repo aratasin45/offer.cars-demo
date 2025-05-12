@@ -1,4 +1,4 @@
- "use client";
+"use client";
 import { useState, useEffect } from "react";
 import AdminHeader from "../components/AdminHeader";
 import { useRouter } from "next/navigation";
@@ -46,7 +46,7 @@ export default function CarRegisterPage() {
     if (!token) {
       router.push("/admin/login");
     }
-  }, []);
+  }, [router]);
   
   const [manufacturers, setManufacturers] = useState<Manufacturer[]>([]);
   const [conditions, setConditions] = useState<Condition[]>([]);

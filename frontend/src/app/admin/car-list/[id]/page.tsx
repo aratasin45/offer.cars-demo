@@ -82,7 +82,7 @@ export default function AdminCarDetailPage() {
     const file = e.target.files?.[0];
     if (!file || !car) return;
   
-    const key = `cars/${Date.now()}_${file.name}`;
+    const key = `cars/${Date.now()}key${file.name}`;
     const presignRes = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/s3/presign?filename=${encodeURIComponent(key)}&contentType=${file.type}`
     );
@@ -114,7 +114,7 @@ export default function AdminCarDetailPage() {
     if (!car) return;
 
     const sanitized = Object.fromEntries(
-      Object.entries(editData).filter(([_, v]) => v !== undefined && v !== null)
+      Object.entries(editData).filter(([key, v]) => v !== undefined && v !== null)
     );
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cars/${car.id}`, {
@@ -165,7 +165,7 @@ export default function AdminCarDetailPage() {
               }}
               onClick={() => {
                 setMainImage(img.imageUrl);
-                
+
               }}
             />
             <button

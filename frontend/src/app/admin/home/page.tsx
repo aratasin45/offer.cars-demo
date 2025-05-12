@@ -11,23 +11,15 @@ export default function HomePage() {
   useEffect(() => {
     const username = localStorage.getItem("username");
     const role = localStorage.getItem("role");
-
+  
     if (username && role) {
       setUser({ name: username, role });
+      setLoading(false);
     } else {
       router.push("/admin/login");
     }
+  }, [router]);
 
-    setLoading(false);
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("username");
-    localStorage.removeItem("role");
-    router.push("/admin/login");
-  };
 
   if (loading) return <p>Loading...</p>; // ✅ 認証確認が終わるまで何も描画しない
 

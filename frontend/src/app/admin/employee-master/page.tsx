@@ -74,7 +74,7 @@ export default function EmployeeMasterPage() {
     if (!editingEmployee) return;
 
     const updatedFields = Object.fromEntries(
-      Object.entries(updatedData).filter(([_, value]) => value !== "")
+      Object.entries(updatedData).filter(([, value]) => value !== "")
     );
 
     if (Object.keys(updatedFields).length === 0) {

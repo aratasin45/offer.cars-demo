@@ -3,7 +3,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 export async function fetchAPI(
   endpoint: string,
   method: string = "GET",
-  body?: any,
+  body?: Record<string, unknown>,
   token?: string
 ) {
   const headers: HeadersInit = {
@@ -18,7 +18,7 @@ export async function fetchAPI(
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined,
-    credentials: "include", // Cookie ベースの認証を有効にする場合
+    credentials: "include", // Cookie 認証が必要なら有効
   });
 
   if (!res.ok) {

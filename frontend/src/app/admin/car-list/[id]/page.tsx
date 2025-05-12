@@ -33,7 +33,6 @@ export default function AdminCarDetailPage() {
   const [editData, setEditData] = useState<EditableCar>({});
   const [isEditMode, setIsEditMode] = useState(false);
   const [mainImage, setMainImage] = useState<string | null>(null);
-  const [, setCurrentIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
   const params = useParams();
@@ -53,7 +52,7 @@ export default function AdminCarDetailPage() {
     setCar(data);
     if (data.images?.length > 0) {
       setMainImage(data.images[0].imageUrl);
-      setCurrentIndex(0);
+      
     }
   };
 
@@ -166,7 +165,7 @@ export default function AdminCarDetailPage() {
               }}
               onClick={() => {
                 setMainImage(img.imageUrl);
-                setCurrentIndex(idx);
+                
               }}
             />
             <button

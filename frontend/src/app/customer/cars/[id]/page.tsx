@@ -79,7 +79,7 @@ export default function CustomerCarDetailPage() {
     if (!customerId || !car) return;
   
     const selectedOffers = Object.entries(purchaseStyles)
-      .filter(([_, data]) => data.checked && data.value)
+      .filter(([, data]) => data.checked && data.value)
       .map(([style, data]) => ({
         style,
         price: Number(data.value),

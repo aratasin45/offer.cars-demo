@@ -27,12 +27,18 @@ export default function CustomerCarListPage() {
 
   const router = useRouter(); // ✅ ここはOK
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/customer/login");
-    }
-  }, [router]);
+  const [authChecked, setAuthChecked] = useState(false);
+
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    router.push("/customer/login");
+  } else {
+    setAuthChecked(true);
+  }
+}, [router]);
+
+if (!authChecked) return <p>Checking auth...</p>;
 
     const [cars, setCars] = useState<Car[]>([]);
     const [page, setPage] = useState(1);

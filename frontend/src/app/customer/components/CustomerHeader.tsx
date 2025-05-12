@@ -1,30 +1,27 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CustomerHeader() {
-  const [threeLetter, setThreeLetter] = useState("");
-  const [contractTerm, setContractTerm] = useState("");
+  const [threeLetter, setThreeLetter] = useState<string | null>(null);
+  const [contractTerm, setContractTerm] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    const storedThreeLetter = localStorage.getItem("threeLetter");
-    const storedContractTerm = localStorage.getItem("contractTerm");
-
-    if (storedThreeLetter) setThreeLetter(storedThreeLetter);
-    if (storedContractTerm) setContractTerm(storedContractTerm);
+    setThreeLetter(localStorage.getItem("threeLetter"));
+    setContractTerm(localStorage.getItem("contractTerm"));
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("threeLetter");
-    localStorage.removeItem("contractTerm");
-    window.location.href = "/customer/login";
+    localStorage.clear(); // 🔁 まとめて削除（必要なら個別でもOK）
+    router.push("/customer/login");
   };
 
   return (
     <div className="customer-header-wrapper">
       <div className="customer-header">
-        <span>Three Letter: {threeLetter}</span>
-        <span>Contract Term: {contractTerm}</span>
+        <span>Three Letter: {threeLetter ?? "-"}</span>
+        <span>Contract Term: {contractTerm ?? "-"}</span>
         <button onClick={handleLogout}>Logout</button>
       </div>
     </div>

@@ -3,6 +3,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import AdminHeader from "../components/AdminHeader";
 
+type ContractTerm = "EXW" | "FOB" | "C&F" | "CIF";
+type SaleStyle = "CBU" | "SKD" | "CKD" | "H/CUT" | "EG";
+
+
 type Contract = {
   id: number;
   car: {
@@ -21,8 +25,8 @@ type Contract = {
   factoryPrice: number;
   offerPrice: number;
   profit: number;
-  contractTerm: string;
-  style: string;
+  contractTerm: ContractTerm;
+  style: SaleStyle;
 };
 
 export default function ContractListPage() {
@@ -86,7 +90,7 @@ export default function ContractListPage() {
                 <p><strong>スリーレター:</strong> {contract.customer.threeLetter}</p>
                 <p><strong>契約条件:</strong> {contract.contractTerm}</p>
                 <p><strong>スタイル:</strong> {contract.style}</p>
-                <p><strong>スタート:</strong> {contract.car.startPrice} 千円</p>
+                <p><strong>スタート:</strong> {contract.car.startPrice !== null ? `${contract.car.startPrice} 千円` : "未設定"}</p>
                 <p><strong>＠工場値:</strong> {contract.factoryPrice} 千円</p>
                 <p><strong>オファー:</strong> {contract.offerPrice} 千円</p>
                 <p className="profit">利益: {contract.profit} 千円</p>

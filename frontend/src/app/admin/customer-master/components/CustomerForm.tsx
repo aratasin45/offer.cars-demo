@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import type { ContractTerm } from "./CustomerTable";
 
 // 🔹 型定義をエクスポートすることで他のファイルでも再利用可能
 export interface CustomerData {
@@ -7,7 +8,7 @@ export interface CustomerData {
   threeLetter: string;
   email: string;
   password: string;
-  contractTerm: string;
+  contractTerm: ContractTerm;
 }
 
 export default function CustomerForm({

@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation";
 import AdminHeader from "../components/AdminHeader";
 
 export default function HomePage() {
-  const [user, setUser] = useState<{ name: string; role: string } | null>(null);
+  type UserRole = "admin" | "user";
+  const [user, setUser] = useState<{ name: string; role: UserRole } | null>(null);
   const [loading, setLoading] = useState(true); // ✅ ローディング制御
   const router = useRouter();
 
@@ -12,8 +13,8 @@ export default function HomePage() {
     const username = localStorage.getItem("username");
     const role = localStorage.getItem("role");
   
-    if (username && role) {
-      setUser({ name: username, role });
+    if (username && (role === "admin" || role === "user")) {
+      setUser({ name: username, role }); // ✅ 確実に UserRole 型
       setLoading(false);
     } else {
       router.push("/admin/login");

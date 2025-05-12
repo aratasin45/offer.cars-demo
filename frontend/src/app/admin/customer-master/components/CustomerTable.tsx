@@ -1,12 +1,14 @@
 "use client";
 import { useState } from "react";
 
-interface Customer {
+export type ContractTerm = "EXW" | "FOB" | "C&F" | "CIF";
+
+export interface Customer {
   id: number;
   name: string;
   threeLetter: string;
   email: string;
-  contractTerm: string;
+  contractTerm: ContractTerm;
   createdAt: string;
   updatedAt: string;
 }
@@ -104,14 +106,15 @@ export default function CustomerTable({
             <td>
               {editingId === customer.id ? (
                 <select
-                  value={editedData.contractTerm || ""}
-                  onChange={(e) =>
-                    setEditedData({
-                      ...editedData,
-                      contractTerm: e.target.value,
-                    })
-                  }
-                >
+                value={editedData.contractTerm || ""}
+                onChange={(e) =>
+                  setEditedData({
+                    ...editedData,
+                    contractTerm: e.target.value as ContractTerm, // ← 修正ポイント
+                  })
+                }
+              >
+                
                   <option value="EXW">EXW</option>
                   <option value="FOB">FOB</option>
                   <option value="C&F">C&F</option>

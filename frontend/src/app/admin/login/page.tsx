@@ -38,10 +38,9 @@ export default function LoginPage() {
       localStorage.setItem("username", data.username);
       localStorage.setItem("role", data.role);
 
-      console.log("✅ ログイン成功", data);
 
       router.push("/admin/home"); // 🔹 ホーム画面へ遷移
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("❌ ログインエラー:", error);
       setError("ログインに失敗しました。メールアドレス、社員番号、パスワードを確認してください。");
     }

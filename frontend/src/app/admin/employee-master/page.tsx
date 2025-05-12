@@ -14,6 +14,7 @@ interface Employee {
 export default function EmployeeMasterPage() {
 
   const router = useRouter(); // ✅ ここはOK
+  type UserRole = "admin" | "user";
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -22,7 +23,13 @@ export default function EmployeeMasterPage() {
     }
   }, [router]);
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [newEmployee, setNewEmployee] = useState({
+  const [newEmployee, setNewEmployee] = useState<{
+    name: string;
+    email: string;
+    employeeNumber: string;
+    role: UserRole;
+    password: string;
+  }>({
     name: "",
     email: "",
     employeeNumber: "",

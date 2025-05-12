@@ -6,12 +6,14 @@ import AdminHeader from "../components/AdminHeader";
 import { useRouter } from "next/navigation";
 import type { CustomerData } from "./components/CustomerForm";
 
+type ContractTerm = "EXW" | "FOB" | "C&F" | "CIF";
+
 interface Customer {
   id: number;
   name: string;
   threeLetter: string;
   email: string;
-  contractTerm: string;
+  contractTerm: ContractTerm;
   createdAt: string;
   updatedAt: string;
 }

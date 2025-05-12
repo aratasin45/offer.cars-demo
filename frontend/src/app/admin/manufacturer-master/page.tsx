@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import ManufacturerForm from "./components/ManufacturerForm";
 import ManufacturerTable from "./components/ManufacturerTable";
 import AdminHeader from "../components/AdminHeader";
+import { useRouter } from "next/navigation";
 
 interface Manufacturer {
   id: number;
@@ -11,7 +12,15 @@ interface Manufacturer {
 }
 
 export default function ManufacturerMasterPage() {
+  const router = useRouter(); // ✅ 関数の中で呼ぶ
   const [manufacturers, setManufacturers] = useState<Manufacturer[]>([]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/admin/login");
+    }
+  }, [router]); // ✅ routerを依存に含める
 
   useEffect(() => {
     fetchManufacturers();
@@ -66,6 +75,7 @@ export default function ManufacturerMasterPage() {
   };
 
   const handleDeleteManufacturer = async (id: number) => {
+    if (!confirm("本当に削除しますか？")) return;
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/manufacturers/${id}`, {
         method: "DELETE",

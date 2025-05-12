@@ -82,12 +82,16 @@ export default function AdminCarDetailPage() {
     const file = e.target.files?.[0];
     if (!file || !car) return;
   
-    const key = `cars/${Date.now()}${file.name}`;
+    // ✅ key を定義し、あとで必ず使う
+    const fileKey = `cars/${Date.now()}_${file.name}`;
+  
+    // Presigned URLを取得
     const presignRes = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/s3/presign?filename=${encodeURIComponent(key)}&contentType=${file.type}`
+      `${process.env.NEXT_PUBLIC_API_URL}/s3/presign?filename=${encodeURIComponent(fileKey)}&contentType=${file.type}`
     );
     const { url } = await presignRes.json();
   
+    // S3へアップロード
     const uploadRes = await fetch(url, {
       method: "PUT",
       headers: { "Content-Type": file.type },
@@ -95,8 +99,10 @@ export default function AdminCarDetailPage() {
     });
   
     if (uploadRes.ok) {
-      const imageUrl = `https://${process.env.NEXT_PUBLIC_AWS_BUCKET}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${key}`;
+      // ✅ imageUrlとして使っているので 'fileKey' は未使用にはならない
+      const imageUrl = `https://${process.env.NEXT_PUBLIC_AWS_BUCKET}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${fileKey}`;
   
+      // DBに画像URLを保存
       await fetch(`${process.env.NEXT_PUBLIC_API_URL}/car-images/save`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -109,7 +115,6 @@ export default function AdminCarDetailPage() {
       alert("❌ アップロード失敗");
     }
   };
-
   const handleSaveEdit = async () => {
     if (!car) return;
 

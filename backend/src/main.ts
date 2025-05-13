@@ -7,8 +7,18 @@ async function bootstrap() {
 
   // CORSを環境変数から指定（フロントが Vercel ならそのURL）
   app.enableCors({
-    origin: process.env.FRONTEND_URL || '*',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        'http://localhost:3000',
+        'https://offer-cars-foy1.vercel.app',
+      ];
+  
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORSエラー: ${origin} は許可されていません`));
+      }
+    },
     credentials: true,
   });
 

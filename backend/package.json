@@ -6,8 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-  "build": "nest build" ,
-  "copy:templates": "copyfiles -u 3 \"src/mailer/templates/**/*\" dist/src/mailer/templates",
+  "build": "nest build && npm run copy:templates",
+  "copy:templates": "mkdir -p dist/mailer/templates && cp src/mailer/templates/*.hbs dist/mailer/templates/",
   "copy:templates:watch": "chokidar \"src/mailer/templates/**/*\" -c \"npm run copy:templates\"",
   "start": "nest start",
   "start:dev": "npm run copy:templates && concurrently -k -n NEST,COPY \"nest build --watch\" \"npm run copy:templates:watch\"",

@@ -155,42 +155,49 @@ export default function AdminCarDetailPage() {
         </div>
       )}
 
-{car.images.map((img) => (
-  <div key={img.id} style={{ textAlign: "center" }}>
-    <img
-      src={img.imageUrl}
-      alt="Thumb"
-      style={{
-        width: "100px",
-        height: "70px",
-        objectFit: "cover",
-        cursor: "pointer",
-        border: img.imageUrl === mainImage ? "2px solid blue" : "1px solid gray",
-      }}
-      onClick={() => {
-        setMainImage(img.imageUrl);
-      }}
-    />
-    <button
-      onClick={() => handleDeleteImage(img.id)}
-      style={{
-        marginTop: "4px",
-        backgroundColor: "#d32f2f",
-        color: "white",
-        border: "none",
-        borderRadius: "4px",
-        padding: "2px 6px",
-        cursor: "pointer",
-      }}
-    >
-      削除
-    </button>
-  </div>
-))}
-
-      <div style={{ marginTop: "10px" }}>
-  <label>画像をアップロード：</label>
-  <input type="file" accept="image/*" onChange={handleUpload} />
+{/* サムネイル画像 横並びに修正 */}
+<div
+  style={{
+    display: "flex",
+    gap: "10px",
+    overflowX: "auto",
+    marginTop: "1rem",
+    paddingBottom: "0.5rem",
+    scrollSnapType: "x mandatory",
+  }}
+>
+  {car.images.map((img) => (
+    <div key={img.id} style={{ flex: "0 0 auto", textAlign: "center" }}>
+      <img
+        src={img.imageUrl}
+        alt="Thumb"
+        style={{
+          width: "100px",
+          height: "70px",
+          objectFit: "cover",
+          cursor: "pointer",
+          border: img.imageUrl === mainImage ? "2px solid blue" : "1px solid gray",
+          scrollSnapAlign: "start",
+          borderRadius: "6px",
+        }}
+        onClick={() => setMainImage(img.imageUrl)}
+      />
+      <button
+        onClick={() => handleDeleteImage(img.id)}
+        style={{
+          marginTop: "4px",
+          backgroundColor: "#d32f2f",
+          color: "white",
+          border: "none",
+          borderRadius: "4px",
+          padding: "2px 6px",
+          cursor: "pointer",
+        }}
+      >
+        削除
+      </button>
+    </div>
+  ))}
 </div>
 
       <div style={{ marginTop: "1rem" }}>

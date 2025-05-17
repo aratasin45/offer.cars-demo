@@ -836,7 +836,7 @@ select {
 
 .car-info-card,
 .car-condition-card {
-  background: rgba(0, 0, 0, 0.7); /* 🔹黒の70%不透明（かなり濃い） */
+  background: rgba(0, 0, 0, 0.7) !important;/* 🔹黒の70%不透明（かなり濃い） */
   backdrop-filter: blur(4px);     /* 🔹少しぼかして柔らかく */
   padding: 1rem 1.5rem;
   border-radius: 12px;

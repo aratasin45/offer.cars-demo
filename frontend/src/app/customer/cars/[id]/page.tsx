@@ -235,7 +235,7 @@ export default function CustomerCarDetailPage() {
           }))
         }
         style={{
-          flex: 1,
+          width:"120px",
           padding: "0.5rem",
           borderRadius: "6px",
           border: "none",

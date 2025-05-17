@@ -836,8 +836,8 @@ select {
 
 .car-info-card,
 .car-condition-card {
-  background: rgba(0, 0, 0, 0.4); /* 🔹黒の40%透明 */
-  backdrop-filter: blur(6px);          /* ガラスっぽいぼかし */
+  background: rgba(0, 0, 0, 0.7); /* 🔹黒の70%不透明（かなり濃い） */
+  backdrop-filter: blur(4px);     /* 🔹少しぼかして柔らかく */
   padding: 1rem 1.5rem;
   border-radius: 12px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
@@ -871,7 +871,6 @@ select {
 }
 
 .car-condition-card li::before {
-  content: "✅";
   margin-right: 6px;
 }
 }

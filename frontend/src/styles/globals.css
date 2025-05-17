@@ -836,7 +836,42 @@ select {
 
 .car-info-card,
 .car-condition-card {
-  width: 90%;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  margin: 1rem auto;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.car-condition-card h2 {
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+  font-size: 1.2rem;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+}
+
+.car-condition-card ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.car-condition-card li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.4rem 0;
+  font-weight: bold;
+  color: #fff;
+}
+
+.car-condition-card li::before {
+  content: "✅";
+  margin-right: 6px;
 }
 }
 

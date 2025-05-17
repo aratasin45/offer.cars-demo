@@ -32,7 +32,7 @@ export default function CustomerCarDetailPage() {
   const [mainImage, setMainImage] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const router = useRouter();
   const params = useParams();
@@ -75,6 +75,8 @@ export default function CustomerCarDetailPage() {
   }, [carId, router]);
 
   const handleOfferSubmit = async () => {
+    if (isSubmitting) return; // 🔒 二重送信防止
+  
     const customerId = localStorage.getItem("userId");
     if (!customerId || !car) return;
   
@@ -85,53 +87,53 @@ export default function CustomerCarDetailPage() {
         price: Number(data.value),
       }));
   
-    // 🔥 入力が1つもない場合
     if (selectedOffers.length === 0) {
       alert("❌ Please select at least one purchase style and enter the offer.");
       return;
     }
   
-    // 🔥 NaN（文字入力など）をブロック
     if (selectedOffers.some((o) => isNaN(o.price))) {
       alert("❌ Please enter valid numbers only.");
       return;
     }
   
-    // 🔥 スタート金額チェック
     const startPrice = car.startPrice ?? 0;
-  
-    const invalidOffers = selectedOffers.filter((o) =>
-      o.style !== "EG" && o.price < startPrice
+    const invalidOffers = selectedOffers.filter(
+      (o) => o.style !== "EG" && o.price < startPrice
     );
-  
     if (invalidOffers.length > 0) {
       alert("❌ Offer must be greater than or equal to start price (except EG).");
       return;
     }
   
-    // 🔥 送信処理
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        carId: Number(carId),
-        customerId: Number(customerId),
-        contractTerm,
-        offers: selectedOffers,
-      }),
-    });
+    setIsSubmitting(true); // 🔒 送信開始
   
-    if (res.ok) {
-      alert("✅ Offer submitted successfully");
-      setPurchaseStyles({
-        CBU: { checked: false, value: "" },
-        SKD: { checked: false, value: "" },
-        CKD: { checked: false, value: "" },
-        "H/CUT": { checked: false, value: "" },
-        EG: { checked: false, value: "" },
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          carId: Number(carId),
+          customerId: Number(customerId),
+          contractTerm,
+          offers: selectedOffers,
+        }),
       });
-    } else {
-      alert("❌ Failed to submit offer");
+  
+      if (res.ok) {
+        alert("✅ Offer submitted successfully");
+        setPurchaseStyles({
+          CBU: { checked: false, value: "" },
+          SKD: { checked: false, value: "" },
+          CKD: { checked: false, value: "" },
+          "H/CUT": { checked: false, value: "" },
+          EG: { checked: false, value: "" },
+        });
+      } else {
+        alert("❌ Failed to submit offer");
+      }
+    } finally {
+      setIsSubmitting(false); // 🔓 送信完了
     }
   };
 
@@ -251,9 +253,13 @@ export default function CustomerCarDetailPage() {
 
           <h4>Submit Your Offer</h4>
          
-          <button onClick={handleOfferSubmit} className="employee-button">
-              Submit
-          </button>
+          <button
+  onClick={handleOfferSubmit}
+  className="employee-button"
+  disabled={isSubmitting} // 🔒 送信中は無効
+>
+  {isSubmitting ? "Submitting..." : "Submit"}
+</button>
 
           {/* モーダル表示 */}
           {isModalOpen && (

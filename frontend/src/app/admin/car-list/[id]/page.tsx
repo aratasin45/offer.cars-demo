@@ -33,7 +33,9 @@ export default function AdminCarDetailPage() {
 
 
   const [car, setCar] = useState<Car | null>(null);
-  const [editData, setEditData] = useState<EditableCar>({}); // ✅ 型指定
+  const [editData, setEditData] = useState<EditableCar>({
+    conditionIds: [],
+  });
   const [isEditMode, setIsEditMode] = useState(false);
   const [mainImage, setMainImage] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,6 +63,15 @@ export default function AdminCarDetailPage() {
       setMainImage(data.images[0].imageUrl);
     }
   }, [carId]); // 🔸 carId を依存に含める
+
+  useEffect(() => {
+    if (car) {
+      setEditData((prev) => ({
+        ...prev,
+        conditionIds: car.conditionIds,
+      }));
+    }
+  }, [car]);
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/conditions`)

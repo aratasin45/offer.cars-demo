@@ -259,27 +259,32 @@ export default function AdminCarDetailPage() {
         )}
 
         {/* 状態チェック */}
-        <div>
-          <label>車両状態：</label>
-          <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginTop: "0.5rem" }}>
-            {allConditions.map((cond) => (
-              <label key={cond.id}>
-                <input
-                  type="checkbox"
-                  checked={(editData.conditionIds ?? []).includes(cond.id)}
-                  onChange={(e) => {
-                    const current = editData.conditionIds ?? [];
-                    const updated = e.target.checked
-                      ? [...current, cond.id]
-                      : current.filter((id) => id !== cond.id);
-                    setEditData({ ...editData, conditionIds: updated });
-                  }}
-                />
-                {cond.label}
-              </label>
-            ))}
-          </div>
-        </div>
+<div>
+  <label>車両状態：</label>
+  <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginTop: "0.5rem" }}>
+    {allConditions.map((cond) => {
+      const checkedIds = isEditMode
+        ? editData.conditionIds ?? []
+        : car.conditionIds ?? [];
+      return (
+        <label key={cond.id}>
+          <input
+            type="checkbox"
+            checked={checkedIds.includes(cond.id)}
+            onChange={(e) => {
+              const current = editData.conditionIds ?? car.conditionIds ?? [];
+              const updated = e.target.checked
+                ? [...current, cond.id]
+                : current.filter((id) => id !== cond.id);
+              setEditData({ ...editData, conditionIds: updated });
+            }}
+          />
+          {cond.label}
+        </label>
+      );
+    })}
+  </div>
+</div>
 
         <div style={{ marginTop: "10px" }}>
           {!isEditMode ? (

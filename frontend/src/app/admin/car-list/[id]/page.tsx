@@ -266,35 +266,27 @@ export default function AdminCarDetailPage() {
         )}
 
         {/* チェックリスト */}
-        {!isEditMode && car?.conditionIds?.length && allConditions.length > 0 && (
-  <div style={{ marginTop: "1rem" }}>
-    <h4>Condition（登録済み）</h4>
-    <ul style={{ listStyle: "none", padding: 0 }}>
-      {allConditions
-        .filter((cond) => car.conditionIds?.includes(cond.id))
-        .map((cond) => (
-          <li key={cond.id} style={{ marginBottom: "4px" }}>
-            ✅ {cond.label}
-          </li>
-        ))}
-    </ul>
-  </div>
+        {!isEditMode &&
+  Array.isArray(car?.conditionIds) &&
+  Array.isArray(allConditions) &&
+  allConditions.length > 0 && (
+    <div style={{ marginTop: "1rem" }}>
+      <h4>Condition（登録済み）</h4>
+      <ul style={{ listStyle: "none", padding: 0 }}>
+        {allConditions
+          .filter((cond) => car?.conditionIds?.includes(cond.id))
+          .map((cond) => (
+            <li key={cond.id} style={{ marginBottom: "4px" }}>
+              ✅ {cond.label}
+            </li>
+          ))}
+      </ul>
+    </div>
 )}
-        {/* 編集モードでないときに登録済み状態を一覧表示 */}
-{!isEditMode && (
-  <div style={{ marginTop: "1rem" }}>
-    <h4>Condition（登録済み）</h4>
-    <ul style={{ listStyle: "none", padding: 0 }}>
-      {allConditions
-        .filter((cond) => car.conditionIds.includes(cond.id))
-        .map((cond) => (
-          <li key={cond.id} style={{ marginBottom: "4px" }}>
-            ✅ {cond.label}
-          </li>
-        ))}
-    </ul>
-  </div>
-)}
+        
+   
+  
+
 
         {/* ボタン */}
         <div style={{ marginTop: "10px" }}>

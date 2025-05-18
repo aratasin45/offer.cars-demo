@@ -49,3 +49,6 @@ prisma/migrations/
 
 # ──────────────── Diagnostic Reports ────────────────
 report.*.json
+
+# ignore seed file
+prisma/seed.ts

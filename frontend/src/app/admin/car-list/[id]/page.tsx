@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import AdminHeader from "../../components/AdminHeader";
 
 interface Car {
-  conditionIds: number[];
+  conditions: { conditionId: number }[];
   id: number;
   manufacturer?: { name: string };
   carName: string;
@@ -67,7 +67,7 @@ export default function AdminCarDetailPage() {
         engineModel: car.engineModel,
         displacement: car.displacement,
         startPrice: car.startPrice,
-        conditionIds: car.conditionIds,
+        conditionIds: car.conditions.map((c) => c.conditionId),
       });
       setHasInitializedEditData(true);
     }
@@ -267,14 +267,16 @@ export default function AdminCarDetailPage() {
 
         {/* チェックリスト */}
         {!isEditMode &&
-  Array.isArray(car?.conditionIds) &&
+  Array.isArray(car?.conditions) &&
   Array.isArray(allConditions) &&
   allConditions.length > 0 && (
     <div style={{ marginTop: "1rem" }}>
       <h4>Condition（登録済み）</h4>
       <ul style={{ listStyle: "none", padding: 0 }}>
         {allConditions
-          .filter((cond) => car?.conditionIds?.includes(cond.id))
+          .filter((cond) =>
+            car.conditions.map((c) => c.conditionId).includes(cond.id)
+          )
           .map((cond) => (
             <li key={cond.id} style={{ marginBottom: "4px" }}>
               ✅ {cond.label}
@@ -282,6 +284,7 @@ export default function AdminCarDetailPage() {
           ))}
       </ul>
     </div>
+
 )}
         
    

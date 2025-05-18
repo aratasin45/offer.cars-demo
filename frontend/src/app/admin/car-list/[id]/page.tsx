@@ -128,8 +128,10 @@ export default function AdminCarDetailPage() {
   const handleSaveEdit = async () => {
     if (!car) return;
   
+    const { conditionIds, ...rest } = editData;
+  
     const sanitized = Object.fromEntries(
-      Object.entries(editData).filter(([, v]) => v !== undefined && v !== null)
+      Object.entries(rest).filter(([, v]) => v !== undefined && v !== null)
     );
   
     // 🔹 PATCHでcarの基本情報を更新
@@ -140,13 +142,13 @@ export default function AdminCarDetailPage() {
     });
   
     // 🔹 条件があれば状態（CarCondition）も更新
-    if (res.ok && editData.conditionIds) {
+    if (res.ok && conditionIds) {
       const condRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/car-conditions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           carId: car.id,
-          conditionIds: editData.conditionIds,
+          conditionIds,
         }),
       });
   

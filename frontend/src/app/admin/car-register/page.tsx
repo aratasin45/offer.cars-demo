@@ -73,6 +73,8 @@ export default function CarRegisterPage() {
   const years = Array.from({ length: 30 }, (_, i) => new Date().getFullYear() - i);
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/manufacturers`)
       .then((res) => res.json())
@@ -103,13 +105,16 @@ export default function CarRegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    if (isSubmitting) return; // 🔒 二重送信防止
+    setIsSubmitting(true);    // 🔓 送信開始
+  
     const createdBy = localStorage.getItem("userId");
     if (!createdBy) {
       alert("ログイン情報が見つかりません。");
+      setIsSubmitting(false);
       return;
     }
-
+  
     const payload = {
       ...formData,
       createdBy: Number(createdBy),
@@ -117,15 +122,15 @@ export default function CarRegisterPage() {
       year: Number(formData.year),
       month: Number(formData.month),
       rating: Number(formData.rating),
-      startPrice: Number(formData.startPrice),  // 🆕 🔥ここ追加！
+      startPrice: Number(formData.startPrice),
     };
-
+  
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cars`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-
+  
     if (res.ok) {
       const savedCar = await res.json();
       alert("✅ 車両を登録しました");
@@ -133,6 +138,8 @@ export default function CarRegisterPage() {
     } else {
       alert("❌ 登録に失敗しました");
     }
+  
+    setIsSubmitting(false); // 🔓 処理完了後に解除
   };
 
   const handleEditComplete = async () => {
@@ -307,7 +314,14 @@ export default function CarRegisterPage() {
           placeholder="例）300 → 300,000円"
         />
 
-          <button type="submit" className="employee-button">登録</button>
+       <button
+         type="submit"
+         className="employee-button"
+         disabled={isSubmitting}
+          >
+          {isSubmitting ? "登録中..." : "登録"}
+      </button>
+      
       </form>
 
 )}

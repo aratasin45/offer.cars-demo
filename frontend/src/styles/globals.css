@@ -1301,7 +1301,7 @@ input[type="number"] {
   .employee-form select,
   .employee-form textarea {
     width: 100%;
-    max-width: 100%;
+    max-width: 400px;
     box-sizing: border-box; /* ✅ はみ出し防止 */
     padding: 0.8rem;
     font-size: 1rem;

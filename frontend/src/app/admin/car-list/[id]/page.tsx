@@ -269,22 +269,28 @@ export default function AdminCarDetailPage() {
         <div>
           <label>車両状態：</label>
           <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginTop: "0.5rem" }}>
-            {allConditions.map((cond) => (
-              <label key={cond.id}>
-                <input
-                  type="checkbox"
-                  checked={(editData.conditionIds ?? []).includes(cond.id)}
-                  onChange={(e) => {
-                    const current = editData.conditionIds ?? [];
-                    const updated = e.target.checked
-                      ? [...current, cond.id]
-                      : current.filter((id) => id !== cond.id);
-                    setEditData({ ...editData, conditionIds: updated });
-                  }}
-                />
-                {cond.label}
-              </label>
-            ))}
+          {allConditions.map((cond) => {
+  const isChecked = editData.conditionIds?.includes(cond.id)
+    ?? car?.conditionIds?.includes(cond.id)
+    ?? false;
+
+  return (
+    <label key={cond.id}>
+      <input
+        type="checkbox"
+        checked={isChecked}
+        onChange={(e) => {
+          const current = editData.conditionIds ?? car?.conditionIds ?? [];
+          const updated = e.target.checked
+            ? [...current, cond.id]
+            : current.filter((id) => id !== cond.id);
+          setEditData({ ...editData, conditionIds: updated });
+        }}
+      />
+      {cond.label}
+    </label>
+  );
+})}
           </div>
         </div>
 

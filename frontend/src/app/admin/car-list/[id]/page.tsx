@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import AdminHeader from "../../components/AdminHeader";
 
 interface Car {
+  conditionIds: number[];
   id: number;
   manufacturer?: { name: string }; // ← manufacturerをoptionalに変更
   carName: string;
@@ -18,9 +19,11 @@ interface Car {
   month: number;
   startPrice?: number;
   images: { id: number; imageUrl: string }[];
+  
 }
 
 interface EditableCar extends Partial<Car> {
+  conditionIds?: number[]; // ← `?` を追加、型も `number[]` にして明確に
   modelCodeVin?: string;
 }
 
@@ -30,13 +33,16 @@ export default function AdminCarDetailPage() {
 
 
   const [car, setCar] = useState<Car | null>(null);
-  const [editData, setEditData] = useState<EditableCar>({});
+  const [editData, setEditData] = useState<EditableCar>({}); // ✅ 型指定
   const [isEditMode, setIsEditMode] = useState(false);
   const [mainImage, setMainImage] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
   const params = useParams();
   const carId = params?.id as string;
+  const [allConditions, setAllConditions] = useState<{ id: number; label: string }[]>([]);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  
 
 
   useEffect(() => {
@@ -55,6 +61,12 @@ export default function AdminCarDetailPage() {
       setMainImage(data.images[0].imageUrl);
     }
   }, [carId]); // 🔸 carId を依存に含める
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/conditions`)
+      .then(res => res.json())
+      .then(data => setAllConditions(data));
+  }, []);
   
   useEffect(() => {
     fetchCar();
@@ -78,31 +90,28 @@ export default function AdminCarDetailPage() {
     }
   };
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file || !car) return;
+    if (file) setSelectedFile(file);
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile || !car) return;
   
-    // ✅ key を定義し、あとで必ず使う
-    const fileKey = `cars/${Date.now()}_${file.name}`;
-  
-    // Presigned URLを取得
+    const fileKey = `cars/${Date.now()}_${selectedFile.name}`;
     const presignRes = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/s3/presign?filename=${encodeURIComponent(fileKey)}&contentType=${file.type}`
+      `${process.env.NEXT_PUBLIC_API_URL}/s3/presign?filename=${encodeURIComponent(fileKey)}&contentType=${selectedFile.type}`
     );
     const { url } = await presignRes.json();
   
-    // S3へアップロード
     const uploadRes = await fetch(url, {
       method: "PUT",
-      headers: { "Content-Type": file.type },
-      body: file,
+      headers: { "Content-Type": selectedFile.type },
+      body: selectedFile,
     });
   
     if (uploadRes.ok) {
-      // ✅ imageUrlとして使っているので 'fileKey' は未使用にはならない
       const imageUrl = `https://${process.env.NEXT_PUBLIC_AWS_BUCKET}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${fileKey}`;
-  
-      // DBに画像URLを保存
       await fetch(`${process.env.NEXT_PUBLIC_API_URL}/car-images/save`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -110,6 +119,7 @@ export default function AdminCarDetailPage() {
       });
   
       await fetchCar();
+      setSelectedFile(null); // ← クリア
       alert("✅ アップロード完了");
     } else {
       alert("❌ アップロード失敗");
@@ -117,19 +127,38 @@ export default function AdminCarDetailPage() {
   };
   const handleSaveEdit = async () => {
     if (!car) return;
-
+  
     const sanitized = Object.fromEntries(
       Object.entries(editData).filter(([, v]) => v !== undefined && v !== null)
     );
-
+  
+    // 🔹 PATCHでcarの基本情報を更新
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cars/${car.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(sanitized),
     });
-
-    if (res.ok) {
-      await fetchCar(); // ✅ manufacturer を含む再取得
+  
+    // 🔹 条件があれば状態（CarCondition）も更新
+    if (res.ok && editData.conditionIds) {
+      const condRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/car-conditions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          carId: car.id,
+          conditionIds: editData.conditionIds,
+        }),
+      });
+  
+      if (condRes.ok) {
+        await fetchCar();
+        setIsEditMode(false);
+        alert("✅ 情報と状態を更新しました");
+      } else {
+        alert("❌ 状態の更新に失敗しました");
+      }
+    } else if (res.ok) {
+      await fetchCar();
       setIsEditMode(false);
       alert("✅ 情報を更新しました");
     } else {
@@ -200,6 +229,20 @@ export default function AdminCarDetailPage() {
   ))}
 </div>
 
+<div style={{ marginTop: "1rem" }}>
+  <label>画像追加：</label>
+  <input type="file" accept="image/*" onChange={handleFileSelect} />
+
+  <button
+    onClick={handleUpload}
+    className="employee-button"
+    style={{ marginLeft: "10px" }}
+    disabled={!selectedFile} // 選択されてないときは無効化
+  >
+    📤 画像を保存
+  </button>
+</div>
+
       <div style={{ marginTop: "1rem" }}>
         {isEditMode ? (
           <>
@@ -261,6 +304,26 @@ export default function AdminCarDetailPage() {
             <p>スタートプライス: {car.startPrice?.toLocaleString()},000 JPY</p>
           </>
         )}
+
+<div>
+  <label>車両状態：</label>
+  {allConditions.map((cond: { id: number; label: string }) => (
+  <label key={cond.id} style={{ marginRight: "1rem" }}>
+    <input
+      type="checkbox"
+      checked={(editData.conditionIds ?? car.conditionIds ?? []).includes(cond.id)}
+      onChange={(e) => {
+        const current = editData.conditionIds ?? car.conditionIds ?? [];
+        const updated = e.target.checked
+          ? [...current, cond.id]
+          : current.filter((id: number) => id !== cond.id); // ← id: number を追加
+        setEditData({ ...editData, conditionIds: updated });
+      }}
+    />
+    {cond.label}
+  </label>
+))}
+</div>
 
         <div style={{ marginTop: "10px" }}>
           {!isEditMode ? (

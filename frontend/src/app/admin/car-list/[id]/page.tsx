@@ -337,7 +337,8 @@ export default function AdminCarDetailPage() {
             <button onClick={() => {
               setEditData({
                 ...car,
-                modelCodeVin: `${car.modelCode}-${car.vinNumber}`
+                modelCodeVin: `${car.modelCode}-${car.vinNumber}`,
+                conditionIds: car.conditionIds,
               });
               setIsEditMode(true);
             }} className="employee-button">

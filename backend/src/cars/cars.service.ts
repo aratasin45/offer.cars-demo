@@ -6,36 +6,26 @@ import { MailService } from '../mailer/mailer.service';
 
 @Injectable()
 export class CarsService {
-  constructor(private readonly prisma: PrismaService,
-    private readonly mailService: MailService,) {}
-
-  // 🔹 一覧取得
-  async findAll(): Promise<Car[]> {
-    return this.prisma.car.findMany({
-      include: { 
-        manufacturer: true,
-      createdByUser: true, // 🔥 追加
-      images: true,        // 🔥 サムネイル用
-       },
-      orderBy: { createdAt: 'desc' },
-    });
-  }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly mailService: MailService,
+  ) {}
 
   // 🔹 新規登録（保存前に車両型式と車体番号を分割）
   async create(data: any): Promise<Car> {
     const { modelCodeVin, ...rest } = data;
-  
+
     let modelCode = modelCodeVin;
-    let vinNumber = "";
-  
-    if (modelCodeVin.includes("-") || modelCodeVin.includes("ー")) {
-      const delimiter = modelCodeVin.includes("-") ? "-" : "ー";
+    let vinNumber = '';
+
+    if (modelCodeVin.includes('-') || modelCodeVin.includes('ー')) {
+      const delimiter = modelCodeVin.includes('-') ? '-' : 'ー';
       const parts = modelCodeVin.split(delimiter);
       modelCode = parts[0];
       vinNumber = parts[1];
     }
-  
-    // 🔹 DB登録
+
+    // 🔹 DBに車両を登録
     const newCar = await this.prisma.car.create({
       data: {
         ...rest,
@@ -43,20 +33,24 @@ export class CarsService {
         vinNumber,
       },
     });
-  
-    // ✅ 顧客全員にメール通知
-    const customers = await this.prisma.customer.findMany(); 
-    for (const customer of customers) {
-      if (customer.email) {
-        await this.mailService.sendCarRegisteredEmail(
-          customer.email,
-          'New Vehicle Available!',
-          process.env.CUSTOMER_LOGIN_URL!
-        );
-      }
-    }
-  
-    return newCar; // ← return は最後に1回だけ
+
+    // ✅ メール送信は非同期に後回し（遅延なくレスポンスを返す）
+    setTimeout(async () => {
+      const customers = await this.prisma.customer.findMany();
+
+      await Promise.all(
+        customers.map((customer) => {
+          if (!customer.email) return;
+          return this.mailService.sendCarRegisteredEmail(
+            customer.email,
+            'New Vehicle Available!',
+            process.env.CUSTOMER_LOGIN_URL!,
+          );
+        }),
+      );
+    }, 0);
+
+    return newCar;
   }
 
   // 🔹 rating を更新するメソッド

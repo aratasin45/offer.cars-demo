@@ -17,11 +17,16 @@ export default function CustomerHeader() {
     router.push("/customer/login");
   };
 
+  const handleGoToCars = () => {
+    router.push("/customer/cars");
+  };
+
   return (
     <div className="customer-header-wrapper">
       <div className="customer-header">
         <span>Three Letter: {threeLetter ?? "-"}</span>
         <span>Contract Term: {contractTerm ?? "-"}</span>
+        <button onClick={handleGoToCars}>📦 Cars</button>
         <button onClick={handleLogout}>Logout</button>
       </div>
     </div>

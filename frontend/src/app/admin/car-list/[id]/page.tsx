@@ -41,7 +41,7 @@ export default function AdminCarDetailPage() {
   const params = useParams();
   const carId = params?.id as string;
   const [allConditions, setAllConditions] = useState<{ id: number; label: string }[]>([]);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   
 
 
@@ -91,39 +91,42 @@ export default function AdminCarDetailPage() {
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) setSelectedFile(file);
+    const files = e.target.files;
+    if (files) setSelectedFiles(Array.from(files));
   };
 
   const handleUpload = async () => {
-    if (!selectedFile || !car) return;
+    if (!selectedFiles.length || !car) return;
   
-    const fileKey = `cars/${Date.now()}_${selectedFile.name}`;
-    const presignRes = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/s3/presign?filename=${encodeURIComponent(fileKey)}&contentType=${selectedFile.type}`
-    );
-    const { url } = await presignRes.json();
+    let successCount = 0;
   
-    const uploadRes = await fetch(url, {
-      method: "PUT",
-      headers: { "Content-Type": selectedFile.type },
-      body: selectedFile,
-    });
+    for (const file of selectedFiles) {
+      const fileKey = `cars/${Date.now()}_${file.name}`;
+      const presignRes = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/s3/presign?filename=${encodeURIComponent(fileKey)}&contentType=${file.type}`
+      );
+      const { url } = await presignRes.json();
   
-    if (uploadRes.ok) {
-      const imageUrl = `https://${process.env.NEXT_PUBLIC_AWS_BUCKET}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${fileKey}`;
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/car-images/save`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ carId: car.id, imageUrl }),
+      const uploadRes = await fetch(url, {
+        method: "PUT",
+        headers: { "Content-Type": file.type },
+        body: file,
       });
   
-      await fetchCar();
-      setSelectedFile(null); // ← クリア
-      alert("✅ アップロード完了");
-    } else {
-      alert("❌ アップロード失敗");
+      if (uploadRes.ok) {
+        const imageUrl = `https://${process.env.NEXT_PUBLIC_AWS_BUCKET}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${fileKey}`;
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/car-images/save`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ carId: car.id, imageUrl }),
+        });
+        successCount++;
+      }
     }
+  
+    await fetchCar();
+    setSelectedFiles([]); // ← クリア
+    alert(`✅ ${successCount} 枚の画像をアップロードしました`);
   };
   const handleSaveEdit = async () => {
     if (!car) return;
@@ -233,13 +236,13 @@ export default function AdminCarDetailPage() {
 
 <div style={{ marginTop: "1rem" }}>
   <label>画像追加：</label>
-  <input type="file" accept="image/*" onChange={handleFileSelect} />
+  <input type="file" accept="image/*" onChange={handleFileSelect} multiple />
 
   <button
     onClick={handleUpload}
     className="employee-button"
     style={{ marginLeft: "10px" }}
-    disabled={!selectedFile} // 選択されてないときは無効化
+    disabled={!selectedFiles} // 選択されてないときは無効化
   >
     📤 画像を保存
   </button>
@@ -309,22 +312,24 @@ export default function AdminCarDetailPage() {
 
 <div>
   <label>車両状態：</label>
-  {allConditions.map((cond: { id: number; label: string }) => (
-  <label key={cond.id} style={{ marginRight: "1rem" }}>
-    <input
-      type="checkbox"
-      checked={(editData.conditionIds ?? car.conditionIds ?? []).includes(cond.id)}
-      onChange={(e) => {
-        const current = editData.conditionIds ?? car.conditionIds ?? [];
-        const updated = e.target.checked
-          ? [...current, cond.id]
-          : current.filter((id: number) => id !== cond.id); // ← id: number を追加
-        setEditData({ ...editData, conditionIds: updated });
-      }}
-    />
-    {cond.label}
-  </label>
-))}
+  <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginTop: "0.5rem" }}>
+    {allConditions.map((cond) => (
+      <label key={cond.id}>
+        <input
+          type="checkbox"
+          checked={(editData.conditionIds ?? car.conditionIds ?? []).includes(cond.id)}
+          onChange={(e) => {
+            const current = editData.conditionIds ?? car.conditionIds ?? [];
+            const updated = e.target.checked
+              ? [...current, cond.id]
+              : current.filter((id) => id !== cond.id);
+            setEditData({ ...editData, conditionIds: updated });
+          }}
+        />
+        {cond.label}
+      </label>
+    ))}
+  </div>
 </div>
 
         <div style={{ marginTop: "10px" }}>

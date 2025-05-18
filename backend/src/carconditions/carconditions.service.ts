@@ -10,6 +10,11 @@ export class CarConditionsService {
     if (!Array.isArray(conditionIds)) {
       throw new Error('conditionIds must be an array');
     }
+
+    // 既存の状態を削除
+   await this.prisma.carCondition.deleteMany({
+    where: { carId },
+    });
   
     const data = conditionIds.map((conditionId) => ({
       carId,

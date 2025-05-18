@@ -18,7 +18,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
         },
       },
       defaults: {
-        from: '"🚗車両登録" <no-reply@example.com>',
+        from: '"The vehicle has been added. from shima company" <no-reply@example.com>',
       },
       template: {
         dir: path.join(__dirname, 'templates'),

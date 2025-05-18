@@ -29,6 +29,7 @@ interface EditableCar extends Partial<Car> {
 export default function AdminCarDetailPage() {
   const [car, setCar] = useState<Car | null>(null);
   const [editData, setEditData] = useState<EditableCar>({});
+  const [hasInitializedEditData, setHasInitializedEditData] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [mainImage, setMainImage] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,23 +49,29 @@ export default function AdminCarDetailPage() {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cars/${carId}`);
     const data = await res.json();
     setCar(data);
-    setEditData({
-      carName: data.carName,
-      carNameEn: data.carNameEn,
-      year: data.year,
-      month: data.month,
-      modelCodeVin: `${data.modelCode}-${data.vinNumber}`,
-      engineModel: data.engineModel,
-      displacement: data.displacement,
-      startPrice: data.startPrice,
-      conditionIds: data.conditionIds,
-    });
     if (data.images?.length > 0) setMainImage(data.images[0].imageUrl);
   }, [carId]);
 
   useEffect(() => {
     fetchCar();
   }, [fetchCar]);
+
+  useEffect(() => {
+    if (car && !hasInitializedEditData) {
+      setEditData({
+        carName: car.carName,
+        carNameEn: car.carNameEn,
+        year: car.year,
+        month: car.month,
+        modelCodeVin: `${car.modelCode}-${car.vinNumber}`,
+        engineModel: car.engineModel,
+        displacement: car.displacement,
+        startPrice: car.startPrice,
+        conditionIds: car.conditionIds,
+      });
+      setHasInitializedEditData(true);
+    }
+  }, [car, hasInitializedEditData]);
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/conditions`)
@@ -132,7 +139,6 @@ export default function AdminCarDetailPage() {
     if (!car) return;
     const { conditionIds, modelCodeVin, ...rest } = editData;
 
-    // 型式・車体番号を分割
     const [modelCode, vinNumber] = (modelCodeVin ?? "").split("-");
 
     const sanitized = {
@@ -180,6 +186,7 @@ export default function AdminCarDetailPage() {
       <AdminHeader />
       <h2>🚗 {car.manufacturer?.name ?? "メーカー不明"} / {car.carName}</h2>
 
+      {/* メイン画像 */}
       {mainImage && (
         <div style={{ marginBottom: "10px" }}>
           <img
@@ -191,10 +198,10 @@ export default function AdminCarDetailPage() {
         </div>
       )}
 
-      {/* 画像一覧 */}
+      {/* サムネイル */}
       <div style={{ display: "flex", gap: "10px", overflowX: "auto", marginTop: "1rem" }}>
         {car.images.map((img) => (
-          <div key={img.id} style={{ flex: "0 0 auto", textAlign: "center" }}>
+          <div key={img.id}>
             <img
               src={img.imageUrl}
               alt="Thumb"
@@ -225,7 +232,7 @@ export default function AdminCarDetailPage() {
         ))}
       </div>
 
-      {/* 画像追加 */}
+      {/* 画像アップロード */}
       <div style={{ marginTop: "1rem" }}>
         <label>画像追加：</label>
         <input type="file" accept="image/*" onChange={handleFileSelect} multiple />
@@ -258,44 +265,33 @@ export default function AdminCarDetailPage() {
           </>
         )}
 
-        {/* 状態チェック */}
-<div>
-  <label>車両状態：</label>
-  <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginTop: "0.5rem" }}>
-    {allConditions.map((cond) => {
-      const checkedIds = isEditMode
-        ? editData.conditionIds ?? []
-        : car.conditionIds ?? [];
-      return (
-        <label key={cond.id}>
-          <input
-            type="checkbox"
-            checked={checkedIds.includes(cond.id)}
-            onChange={(e) => {
-              const current = editData.conditionIds ?? car.conditionIds ?? [];
-              const updated = e.target.checked
-                ? [...current, cond.id]
-                : current.filter((id) => id !== cond.id);
-              setEditData({ ...editData, conditionIds: updated });
-            }}
-          />
-          {cond.label}
-        </label>
-      );
-    })}
-  </div>
-</div>
+        {/* チェックリスト */}
+        <div>
+          <label>車両状態：</label>
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginTop: "0.5rem" }}>
+            {allConditions.map((cond) => (
+              <label key={cond.id}>
+                <input
+                  type="checkbox"
+                  checked={(editData.conditionIds ?? []).includes(cond.id)}
+                  onChange={(e) => {
+                    const current = editData.conditionIds ?? [];
+                    const updated = e.target.checked
+                      ? [...current, cond.id]
+                      : current.filter((id) => id !== cond.id);
+                    setEditData({ ...editData, conditionIds: updated });
+                  }}
+                />
+                {cond.label}
+              </label>
+            ))}
+          </div>
+        </div>
 
+        {/* ボタン */}
         <div style={{ marginTop: "10px" }}>
           {!isEditMode ? (
-            <button
-              onClick={() => {
-                setIsEditMode(true);
-              }}
-              className="employee-button"
-            >
-              ✏️ 編集
-            </button>
+            <button onClick={() => setIsEditMode(true)} className="employee-button">✏️ 編集</button>
           ) : (
             <>
               <button onClick={handleSaveEdit} className="employee-button">💾 保存</button>
@@ -314,7 +310,7 @@ export default function AdminCarDetailPage() {
             top: 0, left: 0, width: "100vw", height: "100vh",
             backgroundColor: "rgba(0,0,0,0.8)",
             display: "flex", justifyContent: "center", alignItems: "center",
-            zIndex: 1000
+            zIndex: 1000,
           }}
           onClick={() => setIsModalOpen(false)}
         >

@@ -386,6 +386,8 @@ body {
   flex-direction: column;
   gap: 0.8rem;
   margin-bottom: 1.5rem;
+
+  align-items: center;
 }
 
 .employee-form input {
@@ -400,6 +402,7 @@ body {
  .employee-form select {
   max-width: 400px;
   width: 100%;
+  margin: 0 auto;
   box-sizing: border-box;
 }
 

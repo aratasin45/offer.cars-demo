@@ -266,26 +266,35 @@ export default function AdminCarDetailPage() {
         )}
 
         {/* チェックリスト */}
-        {!isEditMode &&
-  Array.isArray(car?.conditions) &&
-  Array.isArray(allConditions) &&
-  allConditions.length > 0 && (
-    <div style={{ marginTop: "1rem" }}>
-      <h4>Condition（登録済み）</h4>
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {allConditions
-          .filter((cond) =>
-            car.conditions.map((c) => c.conditionId).includes(cond.id)
-          )
-          .map((cond) => (
-            <li key={cond.id} style={{ marginBottom: "4px" }}>
-              ✅ {cond.label}
-            </li>
-          ))}
-      </ul>
-    </div>
+        <div>
+  <label>車両状態：</label>
+  <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginTop: "0.5rem" }}>
+    {allConditions.map((cond) => {
+      const currentIds = editData.conditionIds ?? car?.conditions?.map((c) => c.conditionId) ?? [];
+      const isChecked = currentIds.includes(cond.id);
 
-)}
+      return (
+        <label key={cond.id}>
+          {isEditMode ? (
+            <input
+              type="checkbox"
+              checked={isChecked}
+              onChange={(e) => {
+                const updated = e.target.checked
+                  ? [...currentIds, cond.id]
+                  : currentIds.filter((id) => id !== cond.id);
+                setEditData({ ...editData, conditionIds: updated });
+              }}
+            />
+          ) : (
+            isChecked ? "✅" : "⬜"
+          )}
+          {cond.label}
+        </label>
+      );
+    })}
+  </div>
+</div>
         
    
   

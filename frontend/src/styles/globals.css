@@ -205,6 +205,9 @@ body {
   .employee-form input,
   .employee-form select {
     font-size: 1rem;
+    width: 100%;
+   max-width: 400px; /* 💡 追加：PCでの横幅制限 */
+   box-sizing: border-box;
   }
 
   .employee-form input,

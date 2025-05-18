@@ -26,7 +26,7 @@ export default function CustomerHeader() {
       <div className="customer-header">
         <span>Three Letter: {threeLetter ?? "-"}</span>
         <span>Contract Term: {contractTerm ?? "-"}</span>
-        <button onClick={handleGoToCars}>back</button>
+        <button onClick={handleGoToCars}>list</button>
         <button onClick={handleLogout}>Logout</button>
       </div>
     </div>

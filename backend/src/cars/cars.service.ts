@@ -35,7 +35,7 @@ export class CarsService {
     });
 
     // ✅ メール送信は非同期に後回し（遅延なくレスポンスを返す）
-    setTimeout(async () => {
+    /*setTimeout(async () => {
       const customers = await this.prisma.customer.findMany();
 
       await Promise.all(
@@ -48,7 +48,7 @@ export class CarsService {
           );
         }),
       );
-    }, 0);
+    }, 0);*/
 
     return newCar;
   }

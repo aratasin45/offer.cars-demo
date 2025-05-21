@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 interface Car {
   id: number;
-  manufacturer: { name: string };
+  manufacturer: { nameEn: string }; // ← 変更！
   carName: string;
   carNameEn: string;
   modelCode: string;
@@ -83,7 +83,7 @@ export default function CustomerCarListPage() {
 
               <div className="car-details">
                 <p>{car.year}/{car.month}</p>
-                <p>{car.manufacturer.name} / {car.carNameEn}</p>
+                <p>{car.manufacturer.nameEn} / {car.carNameEn}</p>
                 <p>{car.modelCode} - {car.vinNumber}</p>
                 <p>Engine: {car.engineModel} / {car.displacement}cc</p>
                 <p>{car.driveType} / {car.transmission}</p>

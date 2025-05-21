@@ -171,7 +171,11 @@ export class CarsService {
         take: limit,
         where: { status: 'available' },
         include: {
-          manufacturer: true,
+          manufacturer:  {
+            select: {
+              nameEn: true, // ✅ 英語名のみ取得
+            },
+          },
           images: true,
         },
         orderBy: { createdAt: 'desc' },

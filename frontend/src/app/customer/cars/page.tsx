@@ -60,7 +60,7 @@ export default function CustomerCarListPage() {
     <>
       <CustomerHeader />
       <div className="car-list-container">
-        <h2>🚗 Available Vehicles</h2>
+        <h2>🚗 Car under negotiation</h2>
         <div className="car-list">
           {cars.map((car) => (
             <div key={car.id} className="car-card">

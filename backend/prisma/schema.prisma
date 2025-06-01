@@ -94,16 +94,17 @@ model Car {
 }
 
 model Offer {
-  id          Int      @id @default(autoincrement())
-  carId       Int
-  customerId  Int
-  style       String
-  offerPrice  Int
-  contractTerm String  
-  createdAt   DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  carId        Int
+  customerId   Int
+  style        String
+  offerPrice   Int
+  contractTerm String
+  status       String   @default("pending") // 🔥 追加: pending / tentative / sold / no get
+  createdAt    DateTime @default(now())
 
-  car         Car      @relation(fields: [carId], references: [id])
-  customer    Customer @relation(fields: [customerId], references: [id])
+  car          Car      @relation(fields: [carId], references: [id])
+  customer     Customer @relation(fields: [customerId], references: [id])
 }
 
 model Contract {

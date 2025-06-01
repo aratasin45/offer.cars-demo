@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class OffersService {
+  
   constructor(private prisma: PrismaService) {}
 
   // 🔹 複数オファーの登録処理
@@ -47,4 +48,14 @@ export class OffersService {
       },
     });
   }
+
+  // ✅ ステータス更新処理を追加
+  async updateStatus(id: number, status: string) {
+    return this.prisma.offer.update({
+      where: { id },
+      data: { status },
+    });
+  }
+
+  
 }

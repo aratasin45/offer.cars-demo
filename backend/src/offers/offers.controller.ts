@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Query } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query, Patch, Param } from '@nestjs/common';
 import { OffersService } from './offers.service';
 
 @Controller('offers')
@@ -27,5 +27,11 @@ export class OffersController {
   @Get('by-car')
   async findByCar(@Query('carId') carId: string) {
     return this.offersService.findByCar(Number(carId));
+  }
+
+  // ✅ ステータス更新エンドポイント
+  @Patch(':id/status')
+  async updateStatus(@Param('id') id: string, @Body('status') status: string) {
+    return this.offersService.updateStatus(Number(id), status);
   }
 }

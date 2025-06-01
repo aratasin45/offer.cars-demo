@@ -4,6 +4,7 @@ import AdminHeader from "../components/AdminHeader";
 import { useRouter } from "next/navigation";
 
 interface Offer {
+  status: string;
   id: number;
   offerPrice: number;
   style: string;
@@ -145,58 +146,92 @@ export default function AdminOffersPage() {
                 <td>
                   {canOperate && (
                     <>
-                      <button
-                        disabled={offer.car.status !== "closed"}
-                        onClick={async () => {
-                          const factoryPriceStr = window.prompt("＠工場値（千円）を入力してください:");
-                          if (!factoryPriceStr) return;
+                    <button
+  disabled={offer.car.status !== "closed"}
+  onClick={async () => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers/${offer.id}/status`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: "selected" }),
+    });
 
-                          const factoryPrice = parseInt(factoryPriceStr, 10);
-                          if (isNaN(factoryPrice)) {
-                            alert("数値を入力してください");
-                            return;
-                          }
+    if (res.ok) {
+      alert("✅ 仮確定しました");
+      setOffers((prev) =>
+        prev.map((o) =>
+          o.id === offer.id ? { ...o, status: "selected" } : o
+        )
+      );
+    } else {
+      alert("❌ 仮確定に失敗しました");
+    }
+  }}
+  style={{
+    backgroundColor:
+      offer.status === "selected"
+        ? "#ffa726" // 🟠 仮確定済み（オレンジ）
+        : offer.car.status !== "closed"
+        ? "#ccc" // 🚫 操作不可（グレー）
+        : "#2196f3", // 🔵 操作可能（青）
+    color: "white",
+    cursor: offer.car.status !== "closed" ? "not-allowed" : "pointer",
+  }}
+>
+  仮確定
+</button>
 
-                          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/contracts`, {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                              carId: offer.car.id,
-                              customerId: offer.customer.id,
-                              createdById: userId,
-                              factoryPrice,
-                              style: offer.style,
-                              offerPrice: offer.offerPrice,
-                              contractTerm: offer.contractTerm,
-                            }),
-                          });
+    <button
+      disabled={offer.status !== "selected"}
+      onClick={async () => {
+        const factoryPriceStr = window.prompt("＠工場値（千円）を入力してください:");
+        if (!factoryPriceStr) return;
 
-                          if (res.ok) {
-                            alert("✅ 成約が登録されました");
-                            setOffers((prev) =>
-                              prev.map((o) =>
-                                o.id === offer.id
-                                  ? {
-                                      ...o,
-                                      car: { ...o.car, status: "sold" },
-                                    }
-                                  : o
-                              )
-                            );
-                            location.reload(); // ✅ ページリロード
-                          } else {
-                            alert("❌ 成約登録に失敗しました");
-                          }
-                        }}
-                        style={{
-                          backgroundColor: offer.car.status !== "closed" ? "#ccc" : "#4caf50",
-                          color: "white",
-                          cursor: offer.car.status !== "closed" ? "not-allowed" : "pointer",
-                          marginRight: "8px",
-                        }}
-                      >
-                        仮確定
-                      </button>
+        const factoryPrice = parseInt(factoryPriceStr, 10);
+        if (isNaN(factoryPrice)) {
+          alert("数値を入力してください");
+          return;
+        }
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/contracts`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            carId: offer.car.id,
+            customerId: offer.customer.id,
+            createdById: userId,
+            factoryPrice,
+            style: offer.style,
+            offerPrice: offer.offerPrice,
+            contractTerm: offer.contractTerm,
+          }),
+        });
+
+        if (res.ok) {
+          alert("✅ 成約が登録されました");
+          setOffers((prev) =>
+            prev.map((o) =>
+              o.id === offer.id
+                ? {
+                    ...o,
+                    car: { ...o.car, status: "sold" },
+                    status: "sold",
+                  }
+                : o
+            )
+          );
+          location.reload();
+        } else {
+          alert("❌ 成約登録に失敗しました");
+        }
+      }}
+      style={{
+        backgroundColor: offer.status === "selected" ? "#4caf50" : "#ccc",
+        color: "white",
+        cursor: offer.status === "selected" ? "pointer" : "not-allowed",
+      }}
+    >
+      成約
+    </button>
 
                       <button
                         onClick={async () => {
@@ -266,58 +301,98 @@ export default function AdminOffersPage() {
         {canOperate && (
           <div className="offer-card-buttons">
             <button
-              className={isDisabled ? "btn-disabled" : "btn-confirm"}
-              disabled={isDisabled}
-              onClick={async () => {
-                const factoryPriceStr = window.prompt("＠工場値（千円）を入力してください:");
-                if (!factoryPriceStr) return;
+  className={isDisabled ? "btn-disabled" : "btn-confirm"}
+  disabled={isDisabled}
+  onClick={async () => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers/${offer.id}/status`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: "selected" }),
+    });
 
-                const factoryPrice = parseInt(factoryPriceStr, 10);
-                if (isNaN(factoryPrice)) {
-                  alert("数値を入力してください");
-                  return;
+    if (res.ok) {
+      alert("✅ 仮確定しました");
+      setOffers((prev) =>
+        prev.map((o) =>
+          o.id === offer.id ? { ...o, status: "selected" } : o
+        )
+      );
+    } else {
+      alert("❌ 仮確定に失敗しました");
+    }
+  }}
+  style={{
+    backgroundColor:
+      offer.status === "selected"
+        ? "#ffa726" // 🟠 仮確定済み
+        : offer.car.status !== "closed"
+        ? "#ccc"
+        : "#2196f3",
+    color: "white",
+    cursor: offer.car.status !== "closed" ? "not-allowed" : "pointer",
+    marginRight: "8px",
+  }}
+>
+  仮確定
+</button>
+
+{offer.status === "selected" && (
+  <button
+    className="btn-confirm"
+    onClick={async () => {
+      const factoryPriceStr = window.prompt("＠工場値（千円）を入力してください:");
+      if (!factoryPriceStr) return;
+
+      const factoryPrice = parseInt(factoryPriceStr, 10);
+      if (isNaN(factoryPrice)) {
+        alert("数値を入力してください");
+        return;
+      }
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/contracts`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          carId: offer.car.id,
+          customerId: offer.customer.id,
+          createdById: userId,
+          factoryPrice,
+          style: offer.style,
+          offerPrice: offer.offerPrice,
+          contractTerm: offer.contractTerm,
+        }),
+      });
+
+      if (res.ok) {
+        alert("✅ 成約が登録されました");
+        setOffers((prev) =>
+          prev.map((o) =>
+            o.id === offer.id
+              ? {
+                  ...o,
+                  car: { ...o.car, status: "sold" },
+                  status: "sold",
                 }
+              : o
+          )
+        );
+        location.reload();
+      } else {
+        alert("❌ 成約登録に失敗しました");
+      }
+    }}
+    style={{
+      backgroundColor: "#4caf50",
+      color: "white",
+      cursor: "pointer",
+      marginTop: "8px",
+    }}
+  >
+    成約
+  </button>
+)}
 
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/contracts`, {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    carId: offer.car.id,
-                    customerId: offer.customer.id,
-                    createdById: userId,
-                    factoryPrice,
-                    style: offer.style,
-                    offerPrice: offer.offerPrice,
-                    contractTerm: offer.contractTerm,
-                  }),
-                });
 
-                if (res.ok) {
-                  alert("✅ 成約が登録されました");
-                  setOffers((prev) =>
-                    prev.map((o) =>
-                      o.id === offer.id
-                        ? {
-                            ...o,
-                            car: { ...o.car, status: "sold" },
-                          }
-                        : o
-                    )
-                  );
-                  location.reload(); // ✅ ページリロード
-                } else {
-                  alert("❌ 成約登録に失敗しました");
-                }
-              }}
-              style={{
-                backgroundColor: offer.car.status !== "closed" ? "#ccc" : "#4caf50",
-                color: "white",
-                cursor: offer.car.status !== "closed" ? "not-allowed" : "pointer",
-                marginRight: "8px",
-              }}
-            >
-              仮確定
-            </button>
             <button
               className="btn-reject"
               onClick={async () => {
